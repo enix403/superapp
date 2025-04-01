@@ -3,12 +3,12 @@
 CONTAINER_NAME="superapp-api-mongodb"
 DATABASE_NAME="superapp-api"
 
-podman container stop $CONTAINER_NAME
-podman container rm $CONTAINER_NAME
+docker container stop $CONTAINER_NAME
+docker container rm $CONTAINER_NAME
 
 mkdir -p .vol-data.mongo
 
-podman run -d \
+docker run -d \
   --rm -it \
   --name $CONTAINER_NAME \
   -v ./.vol-data.mongo:/data/db \
