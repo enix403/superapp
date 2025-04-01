@@ -1,0 +1,54 @@
+I want you to create a linkedin post showcasing my web app project of mine called "FrameCraft" that I have been working on for the past few months.
+
+FrameCraft is a platform/app where you can generate house floor plans using AI. You give it your desired "layout" in the form of a "layout graph" which is a graph with nodes of different room types (like living room, bedroom, kitchen etc and more) and edges between nodes represent doors (connection) between those rooms. You input the graph using an interactive graph editor. You also enter settings like the dimensions of your land/plot where the house is to be built.
+
+The app then generates an optimized floor plan through AI. The plan is also show in a interactive 2d editor where you can pan and zoom around and also tweak some display settings.
+
+The AI model used is a modified version of the model described in the paper "House-GAN++: Generative Adversarial Layout Refinement Networks".
+
+The tech stack used is: React for Frontend, and Python for AI floor plan generation (i.e implementing the AI model)
+
+Keep the LinkedIn post calm, non-flashy and professional. Keep it charming and non invasive to reader. Do not sound too desperate for attention.
+
+------
+
+Add the following in the post somewhere (rephrase it to make it better before adding):
+
+I am enjoying on FrameCraft. It has allowed me put graph algorithms (and others too) into practical use since it involves graph too much ...
+
+Next up, I will be working on the some new features such as:
+
+- viewing the generated floor plan in 3d
+- exporting the floor plan in industry compatible formats.
+
+
+---------------
+
+Create a continuation post showcasing the new feature "viewing the generated floor plan in 3d". (assume I have attached a screen capture of the floor plan being viewed in 3d). Keep this post very calm and engaging. Take about how the colors do not look good at the moment but I wanted to create it as a proof of concept, I will be working on the aesthetics now that I have the baseline 3d rendering working. (I created this using three.js)
+
+
+-------
+
+
+Here’s a calm and engaging continuation post for your new 3D feature:
+
+---
+
+Excited to share some progress on FrameCraft. 🎉
+
+I’ve been working on adding **3D visualization** to the AI-generated floor plans, and here’s a first look.
+
+Right now, the colors and materials aren’t quite there yet—it’s more of a **proof of concept** to get the **3D rendering working properly**. Now that the foundation is in place, I’ll be focusing on improving the aesthetics, refining the materials, and making the visualization more polished and detailed.
+
+In the future, I'll be focusing more on:
+✅ Fine-tune colors and lighting
+✅ Improve the rendering quality
+✅ Add interactive features for better user experience
+
+This was built using Three.js. It’s been a fun challenge so far. Would love to hear your thoughts.
+
+If you are interested, feel free to check out FrameCraft here:
+
+https://github.com/enix403/framecraft-prototype
+
+#AI #React #ThreeJS #MachineLearning #WebDevelopment #Architecture #3D

@@ -1,0 +1,184 @@
+@baseUrl = http://localhost:3001
+
+###
+# -------------------------
+# @name QueryHealth
+GET {{baseUrl}}/health
+Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+# @name CmdTemp
+POST {{baseUrl}}/temp
+
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+
+###
+# -------------------------
+# @name CmdSignUp
+POST {{baseUrl}}/auth/sign-up
+
+{
+  "email": "user1@gmail.com",
+  "password": "pass",
+  "fullName": "User 1"
+}
+
+###
+# -------------------------
+# @name CmdVerify
+POST {{baseUrl}}/auth/verify
+
+{
+  "userId": "67da8b071cceea11fbbb093c",
+  "token": "d1a4d6d5eed63cf5f388bbbe3463abd8"
+}
+
+###
+# -------------------------
+# @name CmdLogin
+POST {{baseUrl}}/auth/login
+
+{
+  "email": "user1@gmail.com",
+  "password": "pass"
+}
+
+###
+@accessToken = {{CmdLogin.response.body.$.accessToken}}
+
+
+###
+# -------------------------
+# @name CmdGetMe
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+###
+# -------------------------
+# @name CmdForgetInit
+POST {{baseUrl}}/auth/forget-password/init
+
+{
+  "email": "user1@gmail.com"
+}
+
+###
+# -------------------------
+# @name CmdForgetSet
+POST {{baseUrl}}/auth/forget-password/set
+
+{
+  "userId": "67da8b071cceea11fbbb093c",
+  "token": "15f38e16de4b5f4c8c36dd7488e0e4fc",
+  "newPassword": "pass2"
+}
+
+
+# ==================================
+# ==================================
+# ==================================
+# ==================================
+
+###
+# -------------------------
+# @name CmdPlanGenerate
+POST {{baseUrl}}/plan/generate
+Authorization: Bearer {{accessToken}}
+
+{
+  "name": "My Plan 16",
+  "plotWidth": 100,
+  "plotLength": 116,
+  "plotMeasureUnit": "ft",
+  "layout": {
+    "nodes": [
+      {
+        "label": "Front Door Entrance",
+        "typeId": "fdoor",
+        "position": {
+          "x": -127,
+          "y": 58
+        }
+      },
+      {
+        "label": "Main Living Room",
+        "typeId": "living",
+        "position": {
+          "x": 108.46610273998658,
+          "y": -108.6924990227919
+        }
+      },
+      {
+        "label": "Bathroom 1",
+        "typeId": "bathroom",
+        "position": {
+          "x": -65.4420842364884,
+          "y": -255.97923641849903
+        }
+      },
+      {
+        "label": "Kitchen 1",
+        "typeId": "kitchen",
+        "position": {
+          "x": 305.2666826493421,
+          "y": -273.6314369121392
+        }
+      },
+      {
+        "label": "Bedroom 1",
+        "typeId": "bedroom",
+        "position": {
+          "x": 413.91800750085883,
+          "y": -17.35602938193105
+        }
+      }
+    ],
+    "edges": [
+      [0, 1],
+      [1, 2],
+      [1, 3],
+      [1, 4]
+    ]
+  }
+}
+
+###
+# -------------------------
+# @name CmdPlanGet
+GET {{baseUrl}}/plan/67e077d384f6e65101957807
+Authorization: Bearer {{accessToken}}
+
+
+###
+# -------------------------
+# @name CmdPlanGetAll
+GET {{baseUrl}}/plan/all
+Authorization: Bearer {{accessToken}}
+
+
+###
+# -------------------------
+GET {{baseUrl}}/users
+
+###
+# -------------------------
+DELETE {{baseUrl}}/users/batch-delete
+
+{
+  "ids": [
+    "67e68f55042c81734f1d4d93",
+    "67e68f55042c81734f1d4d94",
+    "67e68f55042c81734f1d4d9b",
+    "67e68f55042c81734f1d4d9e",
+    "67e68f55042c81734f1d4da0",
+    "67e68f55042c81734f1d4da6",
+    "67e68f55042c81734f1d4da9",
+    "67e68f55042c81734f1d4dab",
+    "67e68f55042c81734f1d4db5",
+    "67e68f55042c81734f1d4d8a"
+  ]
+}
