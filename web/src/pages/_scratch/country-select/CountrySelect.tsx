@@ -1,44 +1,49 @@
 "use client";
 
-import { Fragment, useId, useState } from "react";
+import { useMemo, useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   Command,
   CommandEmpty,
-  CommandGroup,
   CommandInput,
   CommandItem,
   CommandList
 } from "@/components/ui/command";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger
 } from "@/components/ui/popover";
 
-const countries = [
-  { value: "United States", flag: "🇺🇸" },
-  { value: "Canada", flag: "🇨🇦" },
-  { value: "Mexico", flag: "🇲🇽" },
-  { value: "South Africa", flag: "🇿🇦" },
-  { value: "Nigeria", flag: "🇳🇬" },
-  { value: "Morocco", flag: "🇲🇦" },
-  { value: "China", flag: "🇨🇳" },
-  { value: "Japan", flag: "🇯🇵" },
-  { value: "India", flag: "🇮🇳" },
-  { value: "United Kingdom", flag: "🇬🇧" },
-  { value: "France", flag: "🇫🇷" },
-  { value: "Germany", flag: "🇩🇪" },
-  { value: "Australia", flag: "🇦🇺" },
-  { value: "New Zealand", flag: "🇳🇿" }
-];
+import { countries as allCountries } from "countries-list";
+import { hasFlag } from "country-flag-icons";
+import * as allFlags from "country-flag-icons/react/3x2";
 
-export function CountrySelect() {
+function useMaybeControlled<T>({
+  defaultValue,
+  value,
+  onChange
+}: {
+  defaultValue?: T;
+  value?: T;
+  onChange?: (value: T) => void;
+}) {
+
+}
+
+export function CountrySelect({
+  value: daw,
+  onChange
+}: {
+  value?: string;
+  onChange?: (value: string) => void;
+}) {
   const [open, setOpen] = useState<boolean>(false);
   const [value, setValue] = useState<string>("");
+
+  const countryCodes = useMemo(() => Object.keys(allCountries), []);
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
@@ -49,12 +54,12 @@ export function CountrySelect() {
           aria-expanded={open}
           className='w-full justify-between border-input bg-background px-3 font-normal outline-offset-0 outline-none hover:bg-background focus-visible:outline-[3px]'
         >
-          {value ? (
+          {allCountries[value] ? (
             <span className='flex min-w-0 items-center gap-2'>
-              <span className='text-lg leading-none'>
-                {countries.find(item => item.value === value)?.flag}
+              {CountryItemFlag(value)}
+              <span className='truncate'>
+                {allCountries[value].name} ({value})
               </span>
-              <span className='truncate'>{value}</span>
             </span>
           ) : (
             <span className='text-muted-foreground'>Select country</span>
@@ -74,25 +79,36 @@ export function CountrySelect() {
           <CommandInput placeholder='Search country...' />
           <CommandList>
             <CommandEmpty>No country found.</CommandEmpty>
-            {countries.map(country => (
-              <CommandItem
-                key={country.value}
-                value={country.value}
-                onSelect={currentValue => {
-                  setValue(currentValue);
-                  setOpen(false);
-                }}
-              >
-                <span className='text-lg leading-none'>{country.flag}</span>{" "}
-                {country.value}
-                {value === country.value && (
-                  <CheckIcon size={16} className='ml-auto' />
-                )}
-              </CommandItem>
-            ))}
+            {countryCodes.map(code => {
+              return (
+                <CommandItem
+                  key={code}
+                  value={allCountries[code].name}
+                  onSelect={() => {
+                    setValue(code);
+                    setOpen(false);
+                  }}
+                  className='rounded-none'
+                >
+                  {CountryItemFlag(code)}
+                  {allCountries[code].name}
+                  {value === code && (
+                    <CheckIcon size={16} className='ml-auto' />
+                  )}
+                </CommandItem>
+              );
+            })}
           </CommandList>
         </Command>
       </PopoverContent>
     </Popover>
   );
+}
+
+function CountryItemFlag(code: string) {
+  if (hasFlag(code)) {
+    const Flag = allFlags[code];
+    return <Flag className='w-6' />;
+  }
+  return null;
 }
