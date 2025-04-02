@@ -132,9 +132,9 @@ export function UserEditDialogInner({
   const onSubmit = (updates: Partial<User>) => {
     delete updates["email"];
     delete updates["isVerified"];
-    console.log(updates);
+    // console.log(updates);
 
-    // updateUserMutation.mutate(updates);
+    updateUserMutation.mutate(updates);
   };
 
   return (
