@@ -132,8 +132,9 @@ export function UserEditDialogInner({
   const onSubmit = (updates: Partial<User>) => {
     delete updates["email"];
     delete updates["isVerified"];
+    console.log(updates);
 
-    updateUserMutation.mutate(updates);
+    // updateUserMutation.mutate(updates);
   };
 
   return (
@@ -224,7 +225,7 @@ export function UserEditDialogInner({
               name='dateOfBirth'
               render={({ field }) => (
                 <SimpleFormItem
-                  noControl
+                  // noControl
                   label='Date of birth'
                   desc='Your date of birth is used to calculate your age.'
                 >
