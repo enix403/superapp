@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,30 +20,27 @@ import {
 import { countries as allCountries } from "countries-list";
 import { hasFlag } from "country-flag-icons";
 import * as allFlags from "country-flag-icons/react/3x2";
+import { useMaybeControlled } from "@/hooks/useMaybeControlled";
 
-function useMaybeControlled<T>({
+const countryCodes = Object.keys(allCountries);
+
+export function CountrySelect({
   defaultValue,
   value,
   onChange
 }: {
-  defaultValue?: T;
-  value?: T;
-  onChange?: (value: T) => void;
-}) {
-
-}
-
-export function CountrySelect({
-  value: daw,
-  onChange
-}: {
+  defaultValue?: string;
   value?: string;
   onChange?: (value: string) => void;
 }) {
   const [open, setOpen] = useState<boolean>(false);
-  const [value, setValue] = useState<string>("");
+  let [selectedCode, setSelectedCode] = useMaybeControlled({
+    defaultValue,
+    value,
+    onChange
+  });
 
-  const countryCodes = useMemo(() => Object.keys(allCountries), []);
+  selectedCode = selectedCode?.toUpperCase();
 
   return (
     <Popover modal open={open} onOpenChange={setOpen}>
@@ -54,11 +51,11 @@ export function CountrySelect({
           aria-expanded={open}
           className='w-full justify-between border-input bg-background px-3 font-normal outline-offset-0 outline-none hover:bg-background focus-visible:outline-[3px]'
         >
-          {allCountries[value] ? (
+          {selectedCode && allCountries[selectedCode] ? (
             <span className='flex min-w-0 items-center gap-2'>
-              {CountryItemFlag(value)}
+              {CountryItemFlag(selectedCode)}
               <span className='truncate'>
-                {allCountries[value].name} ({value})
+                {allCountries[selectedCode].name}
               </span>
             </span>
           ) : (
@@ -85,16 +82,14 @@ export function CountrySelect({
                   key={code}
                   value={allCountries[code].name}
                   onSelect={() => {
-                    setValue(code);
+                    setSelectedCode(code);
                     setOpen(false);
                   }}
                   className='rounded-none'
                 >
                   {CountryItemFlag(code)}
                   {allCountries[code].name}
-                  {value === code && (
-                    <CheckIcon size={16} className='ml-auto' />
-                  )}
+                  {code === code && <CheckIcon size={16} className='ml-auto' />}
                 </CommandItem>
               );
             })}
