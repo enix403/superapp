@@ -1,14 +1,54 @@
 import { DemoTable } from "@/par/features/datatable/DemoTable";
 import { CountrySelect } from "./country-select/CountrySelect";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DatePicker } from "@/par/cmp/form/DatePicker";
 
+import { ClockIcon } from "lucide-react";
+import { Label } from "react-aria-components";
+
+import { DateInput, TimeField } from "@/components/ui/datefield-rac";
+
+const pad2 = (num: number) => ("0" + num).slice(-2);
+
+function TimeInput() {
+  const [value, setValue] = useState<any>("");
+
+  useEffect(() => {
+    if (value) {
+      let { hour, minute, second } = value as {
+        hour: number;
+        minute: number;
+        second: number;
+        millisecond: number;
+      };
+
+      let res = `0000-01-01T${pad2(hour)}:${pad2(minute)}:${pad2(second)}Z`;
+      console.log(res);
+    }
+    else {
+      console.log("<empty>");
+    }
+  }, [value]);
+
+  return (
+    <>
+      <TimeField value={value} shouldForceLeadingZeros onChange={setValue}>
+        <div className='relative'>
+          <div className='pointer-events-none absolute inset-y-0 start-0 z-10 flex items-center justify-center ps-3 text-muted-foreground/80'>
+            <ClockIcon size={16} aria-hidden='true' />
+          </div>
+          <DateInput className='ps-9' />
+        </div>
+      </TimeField>
+    </>
+  );
+}
+
 export function Scratch() {
-  const [value, setValue] = useState<any>(undefined);
   return (
     <div className='max-h-full w-full max-w-full space-y-7 overflow-y-auto p-8'>
-      <p>{value}</p>
-      <DatePicker value={value} onChange={setValue} />
+      <TimeInput />
+      {/* <DatePicker /> */}
       {/* <CountrySelect defaultValue="pk" /> */}
       {/* <DemoTable /> */}
     </div>
