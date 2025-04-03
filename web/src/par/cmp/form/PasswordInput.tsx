@@ -50,7 +50,7 @@ type PasswordStrengthRequirement = {
   text: string;
 };
 
-const defaultRequirements: PasswordStrengthRequirement[] = [
+export const defaultRequirements: PasswordStrengthRequirement[] = [
   { regex: /.{8,}/, text: "At least 8 characters" },
   { regex: /[0-9]/, text: "At least 1 number" },
   { regex: /[a-z]/, text: "At least 1 lowercase letter" },

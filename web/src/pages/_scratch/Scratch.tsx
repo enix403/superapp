@@ -1,17 +1,7 @@
 import {
-  ChangeEvent,
-  ComponentProps,
-  useCallback,
-  useEffect,
-  useId,
-  useLayoutEffect,
-  useMemo,
   useState
 } from "react";
-import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
-import clsx from "clsx";
 import { PasswordInputWithStrength } from "@/par/cmp/form/PasswordInput";
 
 /* ============================ */
