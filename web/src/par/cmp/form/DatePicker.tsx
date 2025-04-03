@@ -15,15 +15,20 @@ function toUTCISO(date: Date): string {
   return format(date, "yyyy-MM-dd'T'00:00:00'Z'");
 }
 
+// onBlur
 // TODO: receive and forward more props to react-day-picker
 export function DatePicker({
   defaultValue,
   value,
-  onChange
+  onChange,
+  onBlur,
+  disabled
 }: {
   defaultValue?: string;
   value?: string;
   onChange?: (val: string | undefined) => void;
+  onBlur?: () => void;
+  disabled?: boolean;
 }) {
   const [dateISO, setDateISO] = useMaybeControlled<string | undefined>({
     defaultValue,
@@ -37,10 +42,16 @@ export function DatePicker({
   const isDateValid = !isNaN(date);
 
   return (
-    <Popover modal>
+    <Popover
+      modal
+      onOpenChange={open => {
+        if (!open) onBlur?.();
+      }}
+    >
       <PopoverTrigger asChild>
         {/* <FormControl> */}
         <Button
+          disabled={disabled}
           variant={"outline"}
           className={cn(
             "pl-3 text-left font-normal",

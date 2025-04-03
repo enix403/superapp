@@ -97,11 +97,11 @@ export function Scratch() {
                 label='Date of birth'
                 desc='Your date of birth is used to calculate your age.'
               >
-                <DatePicker value={field.value} onChange={field.onChange} />
+                <DatePicker {...field} />
               </SimpleFormItem>
             )}
           />
-          <Button>Done</Button>
+          <Button className="w-96">Done</Button>
         </form>
       </Form>
     </div>
