@@ -2,14 +2,15 @@ import {
   ChangeEvent,
   ComponentProps,
   useCallback,
+  useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useState
 } from "react";
 import { CheckIcon, EyeIcon, EyeOffIcon, XIcon } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import clsx from "clsx";
 
 /* ============================ */
@@ -62,19 +63,47 @@ const defaultRequirements: PasswordStrengthRequirement[] = [
   { regex: /[A-Z]/, text: "At least 1 uppercase letter" }
 ];
 
+function useWatchInput({
+  value,
+  defaultValue,
+  onChange: onChangeProvided
+}: Pick<ComponentProps<"input">, "value" | "defaultValue" | "onChange">) {
+  const hasValue = typeof value !== "undefined";
+  const hasDefaultValue = typeof defaultValue !== "undefined";
+
+  const [watchedValue, setWatchedValue] = useState(
+    hasValue ? value : hasDefaultValue ? defaultValue : undefined
+  );
+
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      onChangeProvided?.(e);
+      if (!hasValue) setWatchedValue(e.target.value);
+    },
+    [onChangeProvided, hasValue]
+  );
+
+  useLayoutEffect(() => {
+    setWatchedValue(value);
+  }, [value]);
+
+  return { value: hasValue ? value : watchedValue, onChange };
+}
+
 function PasswordInputWithStrength({
-  className,
-  onChange: onChangeFromProps,
   requirements = defaultRequirements,
+  className,
   ...inputProps
 }: {
   requirements?: PasswordStrengthRequirement[];
 } & ComponentProps<typeof PasswordInput>) {
   const id = useId();
-  const [password, setPassword] = useState("");
+  const { value, onChange } = useWatchInput(inputProps);
+
+  const password = typeof value === "string" ? value : "";
 
   const strength = requirements.map(req => ({
-    met: req.regex.test(password),
+    met: req.regex.test(password ?? ""),
     text: req.text
   }));
 
@@ -96,23 +125,9 @@ function PasswordInputWithStrength({
     return "Strong password";
   };
 
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      // Call the user provided onChange handler, if present
-      onChangeFromProps?.(e);
-      // Always update out own internal password
-      setPassword(e.target.value);
-    },
-    [onChangeFromProps]
-  );
-
   return (
     <div className={className}>
-      <PasswordInput
-        {...inputProps}
-        // value={password}
-        onChange={onChange}
-      />
+      <PasswordInput {...inputProps} value={value} onChange={onChange} />
 
       {/* Password strength indicator */}
       <div
