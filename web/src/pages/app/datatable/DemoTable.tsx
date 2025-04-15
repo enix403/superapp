@@ -23,7 +23,7 @@ import {
 import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRoutes } from "@/lib/api-routes";
-import { UserEditModal } from "./UserEditModal";
+import { UserInfoModal } from "./UserInfoModal";
 
 // type Item = {
 //   id: string;
@@ -216,12 +216,12 @@ export function DemoTable() {
       renderActions={row => (
         <>
           <DropdownMenuGroup>
-            <UserEditModal userId={row.original.id}>
+            <UserInfoModal userId={row.original.id}>
               <DropdownMenuItem onSelect={e => e.preventDefault()}>
                 <span>Edit</span>
                 <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
               </DropdownMenuItem>
-            </UserEditModal>
+            </UserInfoModal>
             <DropdownMenuItem>
               <span>Duplicate</span>
               <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
