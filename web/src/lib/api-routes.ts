@@ -2,11 +2,14 @@ import ky, { HTTPError } from "ky";
 import { getAuthState } from "@/stores/auth-store";
 import { unslashStart, unslashEnd } from "./utils";
 
-export const API_BASE_URL: string = "http://localhost:3001";
+export let API_BASE_URL: string = import.meta.env.VITE_API_BASE_URL as any;
 
 if (!API_BASE_URL) {
-  throw new Error("Env variable `NEXT_PUBLIC_API_URL` not set");
+  throw new Error("Env variable `VITE_API_BASE_URL` not set");
 }
+
+API_BASE_URL = unslashEnd(API_BASE_URL);
+(window as any).API_BASE_URL = API_BASE_URL;
 
 export class ApiReplyError extends HTTPError {
   constructor(
@@ -32,20 +35,20 @@ export class ApiReplyError extends HTTPError {
 }
 
 export const apiConn = ky.extend({
-  prefixUrl: unslashEnd(API_BASE_URL),
+  prefixUrl: API_BASE_URL,
   timeout: false,
   hooks: {
     beforeRequest: [
-      (request) => {
+      request => {
         let { token } = getAuthState();
         if (token) {
           request.headers.set("Authorization", `Bearer: ${token}`);
         }
         return request;
-      },
+      }
     ],
     beforeError: [
-      async (error) => {
+      async error => {
         const { response } = error;
 
         let isApiReplyError = false;
@@ -64,11 +67,10 @@ export const apiConn = ky.extend({
         }
 
         return error;
-      },
-    ],
-  },
+      }
+    ]
+  }
 });
-
 
 function decl<
   UrlT extends string | ((...args: UrlArgs) => string),
@@ -77,7 +79,7 @@ function decl<
   FuncRet
 >({
   url,
-  invoke,
+  invoke
 }: {
   url: UrlT;
   invoke: (url: UrlT, ...args: FuncArgs) => FuncRet;
@@ -111,9 +113,9 @@ function jsonDecl<UrlT extends string | ((...args: any) => string)>(
     url,
     invoke: (url, ...args: MaybeParameters<UrlT>) => {
       return apiConn(toUrl(url, args), {
-        method: opts?.method ?? "GET",
+        method: opts?.method ?? "GET"
       }).json<any>();
-    },
+    }
   });
 }
 
@@ -126,9 +128,9 @@ function payloadDecl<UrlT extends string | ((...args: any) => string)>(
     invoke: (url, payload: any, ...args: MaybeParameters<UrlT>) => {
       return apiConn(toUrl(url, args), {
         method: opts?.method ?? "POST",
-        json: payload,
+        json: payload
       }).json<any>();
-    },
+    }
   });
 }
 
@@ -149,9 +151,9 @@ function uploadDecl<UrlT extends string | ((...args: any) => string)>(
 
       return apiConn(toUrl(url, args), {
         method: opts?.method ?? "POST",
-        body: formData,
+        body: formData
       }).json<any>();
-    },
+    }
   });
 }
 
