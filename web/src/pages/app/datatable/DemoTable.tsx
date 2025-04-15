@@ -24,6 +24,8 @@ import { ConfirmDialog } from "@/components/ConfirmDialog";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRoutes } from "@/lib/api-routes";
 import { UserInfoModal } from "./UserInfoModal";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "lucide-react";
 
 // type Item = {
 //   id: string;
@@ -198,8 +200,8 @@ export function DemoTable() {
             <UniqueValuesFilter table={table} columnName='role' />
             <ColumnVisibilityControl table={table} />
           </div>
-          {table.getSelectedRowModel().rows.length > 0 && (
-            <div className='ml-auto'>
+          <div className='ml-auto'>
+            {table.getSelectedRowModel().rows.length > 0 && (
               <DeleteRowsButton
                 table={table}
                 onDelete={() => {
@@ -209,14 +211,20 @@ export function DemoTable() {
                   return batchDeleteMutation.mutate(userIds);
                 }}
               />
-            </div>
-          )}
+            )}
+            <UserInfoModal mode='create'>
+              <Button className='ml-2' variant='default'>
+                <PlusIcon className='-ms-1' size={16} aria-hidden='true' />
+                Create User
+              </Button>
+            </UserInfoModal>
+          </div>
         </>
       )}
       renderActions={row => (
         <>
           <DropdownMenuGroup>
-            <UserInfoModal userId={row.original.id}>
+            <UserInfoModal mode='edit' userId={row.original.id}>
               <DropdownMenuItem onSelect={e => e.preventDefault()}>
                 <span>Edit</span>
                 <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>

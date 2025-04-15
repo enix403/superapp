@@ -338,16 +338,69 @@ function UserEditInfoModal({
   );
 }
 
+function UserCreateModal({ setOpen }: { setOpen: ParamVoidCallback<boolean> }) {
+  const form = useForm<User>({
+    resolver: joiResolver(userSchema),
+    mode: "onBlur"
+  });
+
+  /* const queryClient = useQueryClient();
+  const updateUserMutation = useMutation({
+    mutationFn: (updatedFields: Partial<User>) =>
+      apiRoutes.updateUser(updatedFields, user.id),
+
+    ...optimisticUpdateFlow<User>({
+      queryClient,
+      itemId: user.id,
+      itemKey: userQueryKey(user.id),
+      listKey: listQueryKey,
+      onError: () => {
+        toast.error("Failed to update user");
+      },
+      onSuccess: () => {
+        setOpen(false);
+        toast.success("User updated successfully");
+      }
+    })
+  }); */
+
+  const onSubmit = (updates: Partial<User>) => {
+    delete updates["email"];
+    delete updates["isVerified"];
+
+    // updateUserMutation.mutate(updates);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='contents'>
+        <UserInfoFormFields />
+        <UserInfoModalFooter
+          isSubmitPending={false /* updateUserMutation.isPending */}
+        />
+      </form>
+    </Form>
+  );
+}
+
 export function UserInfoModal({
+  mode,
   userId,
   children
-}: { userId: string } & PropsWithChildren) {
+}: (
+  | {
+      mode: "create";
+      userId?: undefined;
+    }
+  | { mode: "edit"; userId: string }
+) &
+  PropsWithChildren) {
   const [open, setOpen] = useState(false);
 
   const { data: user, isError } = useQuery<User>({
     queryKey: ["users", userId],
-    queryFn: () => apiRoutes.getUser(userId),
-    enabled: !!userId
+    queryFn: () => apiRoutes.getUser(userId!),
+    enabled: mode === "edit" && !!userId
   });
 
   return (
@@ -360,8 +413,11 @@ export function UserInfoModal({
           </DialogTitle>
         </DialogHeader>
 
-        {user && !isError && (
-          <UserEditInfoModal user={user} setOpen={setOpen} />
+        {mode === "create" ? (
+          <UserCreateModal setOpen={setOpen} />
+        ) : (
+          user &&
+          !isError && <UserEditInfoModal user={user} setOpen={setOpen} />
         )}
       </DialogContent>
     </Dialog>

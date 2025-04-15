@@ -68,6 +68,39 @@ router.add(
   }
 );
 
+// Create a new user
+router.add(
+  {
+    path: "/",
+    method: "POST",
+    summary: "Create a new user",
+    desc: "Creates a new user with provided details.",
+    schema: {
+      body: Joi.object({
+        email: Joi.string().email().required(),
+        passwordHash: Joi.string().required(),
+        fullName: Joi.string().required(),
+        role: Joi.string().valid("admin", "user").required(),
+        isActive: Joi.boolean(),
+        isVerified: Joi.boolean(),
+        bio: Joi.string().optional(),
+        gender: Joi.string().valid("male", "female").optional(),
+        dateOfBirth: Joi.date().optional(),
+        phoneCountryCode: Joi.string().optional(),
+        phoneNumber: Joi.string().optional(),
+        addressCountry: Joi.string().optional(),
+        addressCity: Joi.string().optional(),
+        addressArea: Joi.string().optional(),
+        addressZip: Joi.string().optional(),
+      }),
+    },
+  },
+  async (req, res) => {
+    const user = await new User(req.body).save();
+    return reply(res, user);
+  }
+);
+
 // Update a user
 router.add(
   {
