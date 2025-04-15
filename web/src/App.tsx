@@ -23,6 +23,7 @@ import { SignUpCompletedPage } from "./pages/auth/SignUpCompletedPage";
 import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { useEffect, useLayoutEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { OAuthSuccess } from "./pages/auth/OAuthSuccess";
 
 function ResetUserQueries() {
   const queryClient = useQueryClient();
@@ -78,6 +79,10 @@ export function App() {
             <Route
               path='login'
               element={<NoLogin><LoginPage /></NoLogin>}
+            />
+            <Route
+              path='oauth-success/:token'
+              element={<OAuthSuccess />}
             />
             <Route
               path='logout'

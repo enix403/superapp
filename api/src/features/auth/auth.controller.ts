@@ -1,5 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import { ApiRouter } from "@/lib/ApiRouter";
 import { appEnv } from "@/lib/app-env";
@@ -292,5 +294,81 @@ router.add(
     }
 
     return reply(res, user);
+  }
+);
+
+/* ========================= */
+
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: appEnv.GOOGLE_CLIENT_ID,
+      clientSecret: appEnv.GOOGLE_CLIENT_SECRET,
+      callbackURL: "/auth/google/callback"
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      done(null, profile);
+    }
+  )
+);
+
+// client redirects here, redirected to google screen
+router.add(
+  { path: "/google", method: "GET" },
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+// google redirects back here
+router.add(
+  {
+    path: "/google/callback",
+    method: "GET",
+    middlewares: [passport.authenticate("google", { session: false })]
+  },
+  async (req: any, res) => {
+    // from above done(null, profile)
+    const profile = req.user;
+
+    const oauthEmail = profile.emails?.[0].value;
+    const googleProfileId = profile.id;
+    const displayName = profile.displayName;
+
+    if (!oauthEmail) {
+      res.status(200).send("need email bad");
+      return;
+    }
+
+    let user = await User.findOne({
+      email: oauthEmail,
+      creationMethod: "google"
+    });
+
+    let needsCreation = !Boolean(user);
+
+    if (needsCreation) {
+      const emailInUse = await User.exists({ email: oauthEmail });
+
+      if (emailInUse) {
+        res.status(200).send("A different non-google account with this email already exists");
+        return;
+      }
+
+      const newUser = await new User({
+        email: oauthEmail,
+        passwordHash: "/",
+        role: "user",
+        fullName: displayName,
+        isActive: true,
+        isVerified: true,
+        creationMethod: "google",
+        oauthProfileId: googleProfileId
+      }).save();
+
+      user = newUser;
+    }
+
+    let accessToken = await tokenService.genAccess(user!);
+
+    res.redirect(`${appEnv.CLIENT_URL}/auth/oauth-success/${accessToken}`);
   }
 );

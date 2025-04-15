@@ -77,6 +77,9 @@ export const appEnv = {
   APP_VERSION: getEnv("APP_VERSION", "0.0.0"),
   // Jwt
   JWT_SIGNING_KEY: getEnv("JWT_SIGNING_KEY"),
+  // Google Auth
+  GOOGLE_CLIENT_ID: requireEnv("GOOGLE_CLIENT_ID"),
+  GOOGLE_CLIENT_SECRET: requireEnv("GOOGLE_CLIENT_SECRET"),
   // Application
   CLIENT_URL: requireEnv("CLIENT_URL"),
   MODEL_SERVICE_URL: requireEnv("MODEL_SERVICE_URL"),
@@ -91,6 +94,7 @@ export const appEnv = {
   REQUIRED_SIGN_UP_VERIFICATION: toBool(
     getEnv("REQUIRED_SIGN_UP_VERIFICATION", true)
   )
+
 };
 
 if (hasMissing) {

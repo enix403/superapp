@@ -27,6 +27,7 @@ export function getAuthState() {
   const store = getDefaultStore();
   return store.get(stateAtom);
 }
+(window as any).getAuthState = getAuthState;
 
 export function useAuthState() {
   return useAtomValue(stateAtom);

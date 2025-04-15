@@ -9,6 +9,8 @@ export interface IUser extends Document<Types.ObjectId> {
   fullName: string;
   isActive: boolean;
   isVerified: boolean;
+  creationMethod: string; // local, google
+  oauthProfileId?: string;
 
   /* ====== Optional profile fields ====== */
 
@@ -37,6 +39,8 @@ const userSchema = new Schema<IUser>(
     fullName: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     isVerified: { type: Boolean, default: false },
+    creationMethod: { type: String, default: "local", required: true },
+    oauthProfileId: { type: String, required: false },
 
     /* ======= */
 
