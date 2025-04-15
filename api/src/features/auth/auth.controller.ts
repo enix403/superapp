@@ -1,3 +1,4 @@
+import type { Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import Joi from "joi";
 import passport from "passport";
@@ -299,6 +300,55 @@ router.add(
 
 /* ========================= */
 
+async function handleOAuthUser(
+  res: Response,
+  provider: string,
+  oauthEmail: string | undefined,
+  profileId: string,
+  userProfileData: any
+) {
+  if (!oauthEmail) {
+    res.status(200).send("need email bad");
+    return;
+  }
+
+  let user = await User.findOne({
+    email: oauthEmail,
+    creationMethod: provider
+  });
+
+  let needsCreation = !Boolean(user);
+
+  if (needsCreation) {
+    const emailInUse = await User.exists({ email: oauthEmail });
+
+    if (emailInUse) {
+      res
+        .status(200)
+        .send("A different non-google account with this email already exists");
+      return;
+    }
+
+    const newUser = await new User({
+      email: oauthEmail,
+      passwordHash: "/",
+      role: "user",
+      isActive: true,
+      isVerified: true,
+      creationMethod: provider,
+      oauthProfileId: profileId,
+      // ....
+      ...userProfileData
+    }).save();
+
+    user = newUser;
+  }
+
+  let accessToken = await tokenService.genAccess(user!);
+
+  res.redirect(`${appEnv.CLIENT_URL}/auth/oauth-success/${accessToken}`);
+}
+
 passport.use(
   new GoogleStrategy(
     {
@@ -328,47 +378,10 @@ router.add(
   async (req: any, res) => {
     // from above done(null, profile)
     const profile = req.user;
-
     const oauthEmail = profile.emails?.[0].value;
-    const googleProfileId = profile.id;
-    const displayName = profile.displayName;
 
-    if (!oauthEmail) {
-      res.status(200).send("need email bad");
-      return;
-    }
-
-    let user = await User.findOne({
-      email: oauthEmail,
-      creationMethod: "google"
+    handleOAuthUser(res, "google", oauthEmail, profile.id, {
+      fullName: profile.displayName
     });
-
-    let needsCreation = !Boolean(user);
-
-    if (needsCreation) {
-      const emailInUse = await User.exists({ email: oauthEmail });
-
-      if (emailInUse) {
-        res.status(200).send("A different non-google account with this email already exists");
-        return;
-      }
-
-      const newUser = await new User({
-        email: oauthEmail,
-        passwordHash: "/",
-        role: "user",
-        fullName: displayName,
-        isActive: true,
-        isVerified: true,
-        creationMethod: "google",
-        oauthProfileId: googleProfileId
-      }).save();
-
-      user = newUser;
-    }
-
-    let accessToken = await tokenService.genAccess(user!);
-
-    res.redirect(`${appEnv.CLIENT_URL}/auth/oauth-success/${accessToken}`);
   }
 );
