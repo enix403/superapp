@@ -47,6 +47,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { SimpleFormItem } from "@/components/form/SimpleFormItem";
 import { optimisticUpdateFlow } from "@/components/form/optim-update-flow";
 import { DatePicker } from "@/components/form/DatePicker";
+import { optimisticCreateFlow } from "@/components/form/optim-create-flow";
 
 // 📌 User Type Definition
 interface User {
@@ -137,7 +138,7 @@ export function UserInfoFormFields() {
         <FormField
           name='bio'
           render={({ field }) => (
-            <SimpleFormItem label='bio'>
+            <SimpleFormItem label='Bio'>
               <Textarea
                 placeholder='Write a few sentences about yourself'
                 {...field}
@@ -344,40 +345,39 @@ function UserCreateModal({ setOpen }: { setOpen: ParamVoidCallback<boolean> }) {
     mode: "onBlur"
   });
 
-  /* const queryClient = useQueryClient();
-  const updateUserMutation = useMutation({
-    mutationFn: (updatedFields: Partial<User>) =>
-      apiRoutes.updateUser(updatedFields, user.id),
+  const queryClient = useQueryClient();
+  const createUserMutation = useMutation({
+    mutationFn: (fields: Partial<User>) => apiRoutes.createUser(fields),
 
-    ...optimisticUpdateFlow<User>({
+    ...optimisticCreateFlow<User>({
       queryClient,
-      itemId: user.id,
-      itemKey: userQueryKey(user.id),
       listKey: listQueryKey,
+      getOptimisticItem: user => ({
+        id: Math.random().toString(),
+        ...user
+      }),
       onError: () => {
-        toast.error("Failed to update user");
+        toast.error("Failed to create user");
       },
       onSuccess: () => {
         setOpen(false);
-        toast.success("User updated successfully");
+        toast.success("User created successfully");
       }
     })
-  }); */
+  });
 
-  const onSubmit = (updates: Partial<User>) => {
-    delete updates["email"];
-    delete updates["isVerified"];
+  const onSubmit = async (fields: Partial<User>) => {
+    delete fields["isVerified"];
 
-    // updateUserMutation.mutate(updates);
+    console.log(fields);
+    createUserMutation.mutate(fields);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className='contents'>
         <UserInfoFormFields />
-        <UserInfoModalFooter
-          isSubmitPending={false /* updateUserMutation.isPending */}
-        />
+        <UserInfoModalFooter isSubmitPending={createUserMutation.isPending} />
       </form>
     </Form>
   );
@@ -404,7 +404,7 @@ export function UserInfoModal({
   });
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={setOpen} modal>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className='flex flex-col gap-0 overflow-y-visible p-0 sm:max-w-2xl [&>button:last-child]:top-3.5'>
         <DialogHeader className='contents space-y-0 text-left'>

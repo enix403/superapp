@@ -46,7 +46,7 @@ const columns: ColumnDef<Item>[] = [
     accessorKey: "fullName",
     cell: ({ row }) => (
       // <div className="font-medium">{row.getValue("name")}</div>
-      <div className='flex items-center gap-3'>
+      <div className='flex items-center gap-3 truncate'>
         <img
           className='rounded-full'
           src={
@@ -76,7 +76,8 @@ const columns: ColumnDef<Item>[] = [
   {
     header: "Email",
     accessorKey: "email",
-    size: 100
+    size: 100,
+    cell: ({ row }) => <div className='truncate'>{row.original.email}</div>
     // size: 220
   },
   {
@@ -182,12 +183,14 @@ export function DemoTable() {
     <AppDataTable
       data={data}
       columns={columns}
-      initialSort={[
-        {
-          id: "fullName",
-          desc: false
-        }
-      ]}
+      initialSort={
+        [
+          // {
+          //   id: "fullName",
+          //   desc: false
+          // }
+        ]
+      }
       enableRowSelect
       renderFilters={({ table }) => (
         <>
