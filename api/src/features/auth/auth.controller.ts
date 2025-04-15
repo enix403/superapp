@@ -48,7 +48,7 @@ router.add(
       email,
       isVerified: true,
       isActive: true,
-      creationMethod: "local"
+      // creationMethod: "local"
     });
 
     if (
