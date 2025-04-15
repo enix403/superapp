@@ -16,7 +16,17 @@ import { unslashEnd } from "@/lib/utils";
 const items = [
   {
     path: "/",
-    label: "My Designs",
+    label: "Dashboard",
+    Icon: Frame
+  },
+  {
+    path: "/table",
+    label: "Data Table",
+    Icon: Frame
+  },
+  {
+    path: "/form",
+    label: "Complex Form",
     Icon: Frame
   }
 ];
