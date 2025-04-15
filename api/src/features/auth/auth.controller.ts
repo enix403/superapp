@@ -47,7 +47,8 @@ router.add(
     const user = await User.findOne({
       email,
       isVerified: true,
-      isActive: true
+      isActive: true,
+      creationMethod: "local"
     });
 
     if (
