@@ -3,13 +3,13 @@ import { useEffect, useState } from "react";
 import {
   PasswordInput,
   PasswordInputWithStrength
-} from "@/par/cmp/form/PasswordInput";
+} from "@/components/form/PasswordInput";
 import { useForm } from "react-hook-form";
 import { Form, FormField } from "@/components/ui/form";
-import { SimpleFormItem } from "@/par/cmp/form/SimpleFormItem";
+import { SimpleFormItem } from "@/components/form/SimpleFormItem";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { DatePicker } from "@/par/cmp/form/DatePicker";
+import { DatePicker } from "@/components/form/DatePicker";
 
 /* ============================ */
 
