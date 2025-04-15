@@ -78,11 +78,9 @@ router.add(
     schema: {
       body: Joi.object({
         email: Joi.string().email().required(),
-        passwordHash: Joi.string().required(),
         fullName: Joi.string().required(),
         role: Joi.string().valid("admin", "user").required(),
         isActive: Joi.boolean(),
-        isVerified: Joi.boolean(),
         bio: Joi.string().optional(),
         gender: Joi.string().valid("male", "female").optional(),
         dateOfBirth: Joi.date().optional(),
@@ -91,12 +89,19 @@ router.add(
         addressCountry: Joi.string().optional(),
         addressCity: Joi.string().optional(),
         addressArea: Joi.string().optional(),
-        addressZip: Joi.string().optional(),
-      }),
-    },
+        addressZip: Joi.string().optional()
+      })
+    }
   },
   async (req, res) => {
-    const user = await new User(req.body).save();
+    const user = await new User({
+      ...req.body,
+      passwordHash: "/",
+      role: "user",
+      isActive: true,
+      isVerified: true,
+      creationMethod: "local",
+    }).save();
     return reply(res, user);
   }
 );
