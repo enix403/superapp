@@ -24,6 +24,16 @@ import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { useEffect, useLayoutEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
+function ResetUserQueries() {
+  const queryClient = useQueryClient();
+  const { token } = useAuthState();
+  useLayoutEffect(() => {
+    queryClient.resetQueries();
+  }, [token]);
+  return null;
+}
+
+/* The child page is accessible only when the user is logged in */
 function Protect({ children }) {
   const { token } = useAuthState();
   if (!token) {
@@ -33,13 +43,14 @@ function Protect({ children }) {
   }
 }
 
-function ResetUserQueries() {
-  const queryClient = useQueryClient();
+/* The child page is accessible only when the user is logged out */
+function NoLogin({ children }) {
   const { token } = useAuthState();
-  useLayoutEffect(() => {
-    queryClient.resetQueries();
-  }, [token]);
-  return null;
+  if (token) {
+    return <Navigate to='/app' replace />;
+  } else {
+    return children;
+  }
 }
 
 export function App() {
@@ -50,17 +61,44 @@ export function App() {
         {/* prettier-ignore */}
         <Routes>
           <Route path='/s' element={<Scratch />} />
-          <Route path='/' element={<HomePage />} />
+          <Route path='' element={<HomePage />} />
           <Route path="/auth">
-            <Route path='sign-up' element={<SignUpPage />} />
-            <Route path='sign-up/done' element={<SignUpCompletedPage />} />
-            <Route path='verify/:userId/:token' element={<VerifyEmail />} />
-            <Route path='login' element={<LoginPage />} />
-            <Route path='logout' element={<LogoutHandler />} />
-            <Route path='forget-password' element={<ForgetPasswordPage />} />
-            <Route path='forget-password/sent' element={<ForgetPasswordEmailSentPage />} />
-            <Route path='reset-password/:userId/:token' element={<ResetPasswordPage />} />
-            <Route path='reset-password/done' element={<ResetPasswordCompletedPage />} />
+            <Route
+              path='sign-up'
+              element={<NoLogin><SignUpPage /></NoLogin>}
+            />
+            <Route
+              path='sign-up/done'
+              element={<NoLogin><SignUpCompletedPage /></NoLogin>}
+            />
+            <Route
+              path='verify/:userId/:token'
+              element={<NoLogin><VerifyEmail /></NoLogin>}
+            />
+            <Route
+              path='login'
+              element={<NoLogin><LoginPage /></NoLogin>}
+            />
+            <Route
+              path='logout'
+              element={<LogoutHandler />}
+            />
+            <Route
+              path='forget-password'
+              element={<NoLogin><ForgetPasswordPage /></NoLogin>}
+            />
+            <Route
+              path='forget-password/sent'
+              element={<NoLogin><ForgetPasswordEmailSentPage /></NoLogin>}
+            />
+            <Route
+              path='reset-password/:userId/:token'
+              element={<NoLogin><ResetPasswordPage /></NoLogin>}
+            />
+            <Route
+              path='reset-password/done'
+              element={<NoLogin><ResetPasswordCompletedPage /></NoLogin>}
+            />
           </Route>
           <Route
             path='/app/*'
