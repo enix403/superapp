@@ -217,7 +217,7 @@ export function DemoTable() {
             )}
             <UserInfoModal mode='create'>
               <Button className='ml-2' variant='default'>
-                <PlusIcon className='-ms-1' size={16} aria-hidden='true' />
+                <PlusIcon className='-ms-1' strokeWidth={3} size={18} aria-hidden='true' />
                 Create User
               </Button>
             </UserInfoModal>
