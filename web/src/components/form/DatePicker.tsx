@@ -7,35 +7,10 @@ import {
 
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn, ParamVoidCallback } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useMaybeControlled } from "@/hooks/useMaybeControlled";
-import { useCallback } from "react";
-
-function toUTCISO(date: Date): string {
-  return format(date, "yyyy-MM-dd'T'00:00:00'Z'");
-}
-
-function useMappedState<T, R>(
-  value: T,
-  setValue: ParamVoidCallback<T>,
-  mapFunc: (val: T) => R,
-  unmapFunc: (val: R) => T
-) {
-  const mapped = mapFunc(value);
-  const setMapped = useCallback(
-    (mapped: R) => {
-      setValue(unmapFunc(mapped));
-    },
-    [unmapFunc, setValue]
-  );
-
-  return [mapped, setMapped] as const;
-}
-
-function useDateToStringAdapter() {
-
-}
+import { useDateToStringAdapter, ADAPTER_FORMAT_DATE_ONLY } from "@/hooks/useDateToStringAdapter";
 
 // onBlur
 // TODO: receive and forward more props to react-day-picker
@@ -58,15 +33,11 @@ export function DatePicker({
     onChange
   });
 
-  const [date, setDate] = useMappedState(
+  const [date, setDate, isDateValid] = useDateToStringAdapter(
     dateISO,
     setDateISO,
-    dateISO => new Date(dateISO ?? "invalid") as Date | undefined,
-    date => (date ? format(date, "yyyy-MM-dd'T'00:00:00'Z'") : undefined)
+    ADAPTER_FORMAT_DATE_ONLY
   );
-  // https://stackoverflow.com/a/1353711
-  // @ts-ignore
-  const isDateValid = !isNaN(date);
 
   return (
     <Popover
@@ -96,7 +67,7 @@ export function DatePicker({
           selected={isDateValid ? date : undefined}
           onSelect={setDate}
           // onSelect={(newDate: Date | undefined) => {
-            // setDateISO(newDate ? toUTCISO(newDate) : undefined);
+          // setDateISO(newDate ? toUTCISO(newDate) : undefined);
           // }}
           // disabled={date => date > new Date() || date < new Date("1900-01-01")}
           initialFocus
