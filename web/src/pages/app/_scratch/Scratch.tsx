@@ -1,9 +1,11 @@
-import HeroVideoDialog from "@/components/magicui/hero-video-dialog";
+import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { FileWithPath, useDropzone } from "react-dropzone";
 
 export function Scratch() {
   return (
-    <div className="relative">
-      Hello
+    <div>
+      Hi
     </div>
   );
 }
