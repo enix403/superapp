@@ -4,6 +4,12 @@ import { CardCarousel } from "@/components/ui/card-carousel";
 import { ExpandedTabs } from "@/components/ui/expanded-tabs";
 import { Home, Bell, Settings, HelpCircle, Shield, User } from "lucide-react";
 import { useState } from "react";
+import {
+  MinimalCard,
+  MinimalCardDescription,
+  MinimalCardImage,
+  MinimalCardTitle
+} from "@/components/ui/minimal-card";
 
 const tabs = [
   { title: "Dashboard", icon: Home },
@@ -30,11 +36,11 @@ function CardsCarouselDemo() {
   const images = [
     { src: "https://skiper-ui.com/card/1.png", alt: "Image 1" },
     { src: "https://skiper-ui.com/card/2.png", alt: "Image 2" },
-    { src: "https://skiper-ui.com/card/3.png", alt: "Image 3" },
-  ]
+    { src: "https://skiper-ui.com/card/3.png", alt: "Image 3" }
+  ];
 
   return (
-    <div className="pt-4">
+    <div className='pt-4'>
       <CardCarousel
         images={images}
         autoplayDelay={2000}
@@ -42,16 +48,28 @@ function CardsCarouselDemo() {
         showNavigation={true}
       />
     </div>
-  )
+  );
 }
 
 export function Scratch() {
   return (
-    <div className="pb-40">
+    <div className='pb-40'>
       <TabsDemo />
       <AnimatedNumberRandom value={490} diff={0} />
       <AnimatedNumberCountdown endDate={new Date("2025-12-31")} />
       <CardsCarouselDemo />
+      <MinimalCard className='my-4 w-[460px]'>
+        <MinimalCardImage
+          className='h-[320px]'
+          src="https://skiper-ui.com/card/1.png"
+        />
+        <MinimalCardTitle>{"Sick title"}</MinimalCardTitle>
+        <MinimalCardDescription>
+          {
+            "How to design with gestures and motion that feel intuitive and natural."
+          }
+        </MinimalCardDescription>
+      </MinimalCard>
     </div>
   );
 }
