@@ -3,7 +3,7 @@ import { Scratch } from "./Scratch";
 
 export function ScratchPage() {
   return (
-    <AppLayout title="Scratch">
+    <AppLayout>
       <Scratch />
     </AppLayout>
   );

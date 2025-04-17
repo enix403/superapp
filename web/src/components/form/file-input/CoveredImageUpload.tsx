@@ -1,7 +1,7 @@
 import { AlertCircleIcon, ImageUpIcon, XIcon } from "lucide-react";
 import { useFileUpload } from "@/hooks/use-file-upload";
 
-export function FullImageUploadBlock({
+export function CoveredImageUpload({
   value,
   onChange,
   disabled
