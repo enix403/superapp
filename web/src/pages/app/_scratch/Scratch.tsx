@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/minimal-card";
 import { AsyncSelect } from "@/components/ui/async-select";
 import { apiRoutes } from "@/lib/api-routes";
+import { BookmarkButton } from "@/components/ui/icon-button/bookmark-icon-button";
 
 const tabs = [
   { title: "Dashboard", icon: Home },
@@ -101,6 +102,11 @@ function Demo() {
 export function Scratch() {
   return (
     <div className='pb-40'>
+      <div>
+        <BookmarkButton />
+      </div>
+      <br />
+      <br />
       <Demo />
       <br />
       <br />
