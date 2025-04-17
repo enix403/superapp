@@ -54,7 +54,7 @@ const buttonVariants = cva(
 
 interface IconProps {
   icon: React.ElementType;
-  iconPlacement: "left" | "right";
+  iconPlacement?: "left" | "right";
 }
 
 interface IconRefProps {
@@ -94,6 +94,8 @@ const Button = React.forwardRef<
     if (loading) {
       props.children = <Spinner />;
     }
+
+    iconPlacement = iconPlacement ?? "left";
 
     return (
       <Comp

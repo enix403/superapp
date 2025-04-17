@@ -15,11 +15,12 @@ import {
 } from "@/components/ui/file-upload";
 import { FormField } from "@/components/ui/form";
 import { useMaybeControlled } from "@/hooks/useMaybeControlled";
-import { Upload, X } from "lucide-react";
+import { HashIcon, Upload, X } from "lucide-react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
+import { apiConn } from "@/lib/api-routes";
 
 function FileUploadBlock({
   value,
@@ -42,7 +43,7 @@ function FileUploadBlock({
     });
   }, []);
 
-  const onUpload = React.useCallback(
+  /* const onUpload = React.useCallback(
     async (
       files: File[],
       {
@@ -95,14 +96,14 @@ function FileUploadBlock({
       }
     },
     []
-  );
+  ); */
 
   return (
     <FileUpload
       value={files}
       onValueChange={setFiles}
       onFileReject={onFileReject}
-      onUpload={onUpload}
+      // onUpload={onUpload}
       accept='image/*'
       maxFiles={2}
       className='w-full'
@@ -140,6 +141,17 @@ function FileUploadBlock({
   );
 }
 
+async function uploadFiles(files: File[]): Promise<string[]> {
+  const formData = new FormData();
+  files.forEach(file => formData.append("files", file));
+
+  return apiConn
+    .post<string[]>("uploads", {
+      body: formData
+    })
+    .json();
+}
+
 export function Scratch() {
   const form = useForm({
     defaultValues: {
@@ -148,8 +160,10 @@ export function Scratch() {
     mode: "onBlur"
   });
 
-  const onSubmit = values => {
-    console.log(values);
+  const onSubmit = async values => {
+    const images: File[] = values.images;
+    const urls = await uploadFiles(images);
+    console.log(urls);
   };
 
   return (
@@ -176,7 +190,13 @@ export function Scratch() {
               </SimpleFormItem>
             )}
           />
-          <Button className='mt-4' effect='gooeyRight' type='submit'>
+          <Button
+            variant='default'
+            className='mt-4'
+            icon={HashIcon}
+            effect='ringHover'
+            type='submit'
+          >
             Upload
           </Button>
         </form>
