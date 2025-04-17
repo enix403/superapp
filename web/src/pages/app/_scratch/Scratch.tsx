@@ -24,10 +24,12 @@ import { apiConn } from "@/lib/api-routes";
 
 function FileUploadBlock({
   value,
-  onChange
+  onChange,
+  disabled
 }: {
   value?: File[];
   onChange?: (files: File[]) => void;
+  disabled?: boolean;
 }) {
   const [filesT, setFiles] = useMaybeControlled<File[]>({
     value,
@@ -109,6 +111,7 @@ function FileUploadBlock({
       className='w-full'
       maxSize={2 * 1024 * 1024 /* 2MB */}
       multiple
+      disabled={disabled}
     >
       <FileUploadDropzone>
         <div className='flex flex-col items-center gap-1'>
@@ -126,10 +129,14 @@ function FileUploadBlock({
       </FileUploadDropzone>
       <FileUploadList>
         {files.map(file => (
-          <FileUploadItem key={file.name} value={file}>
+          <FileUploadItem
+            key={file.name}
+            value={file}
+            className={disabled ? "opacity-50" : ""}
+          >
             <FileUploadItemPreview />
             <FileUploadItemMetadata />
-            <FileUploadItemDelete asChild>
+            <FileUploadItemDelete disabled={disabled} asChild>
               <Button variant='ghost' size='icon' className='size-7'>
                 <X />
               </Button>
@@ -177,15 +184,15 @@ export function Scratch() {
               validate: images =>
                 images.length > 0 || "Please upload at least one image"
             }}
-            render={({ field }) => (
+            render={({ field, formState: { isSubmitting } }) => (
               <SimpleFormItem
                 label='Images'
                 desc='Upload your images here'
                 noControl
               >
                 <FileUploadBlock
-                  value={field.value}
-                  onChange={field.onChange}
+                  {...field}
+                  disabled={isSubmitting || field.disabled}
                 />
               </SimpleFormItem>
             )}
@@ -196,6 +203,7 @@ export function Scratch() {
             icon={HashIcon}
             effect='ringHover'
             type='submit'
+            loading={form.formState.isSubmitting}
           >
             Upload
           </Button>
