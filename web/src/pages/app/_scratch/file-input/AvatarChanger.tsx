@@ -199,7 +199,7 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
         <Avatar className='h-24 w-24 border'>
           <AvatarImage src={avatarSrc || ""} />
           <AvatarFallback className='text-lg'>
-            {avatarSrc ? "" : "User"}
+            {avatarSrc ? "" : "N/A"}
           </AvatarFallback>
         </Avatar>
         <div

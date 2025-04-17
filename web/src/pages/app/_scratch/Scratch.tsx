@@ -26,7 +26,8 @@ export function Scratch() {
 
   return (
     <div className='pb-40'>
-      <AvatarChanger initialImageSrc='/profile_img_01.png' />
+      {/* <AvatarChanger initialImageSrc='/profile_img_01.png' /> */}
+      <AvatarChanger />
       <Form {...form}>
         <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
           <FormField
