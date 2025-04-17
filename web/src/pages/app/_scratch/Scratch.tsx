@@ -2,8 +2,8 @@ import AnimatedNumberCountdown from "@/components/ui/animated-number-countdown";
 import AnimatedNumberRandom from "@/components/ui/animated-number-random";
 import { CardCarousel } from "@/components/ui/card-carousel";
 import { ExpandedTabs } from "@/components/ui/expanded-tabs";
-import { Home, Bell, Settings, HelpCircle, Shield, User } from "lucide-react";
-import { useRef, useState } from "react";
+import { Home, Bell, Settings, HelpCircle, Shield } from "lucide-react";
+import { useState } from "react";
 import {
   MinimalCard,
   MinimalCardDescription,
@@ -14,16 +14,6 @@ import { AsyncSelect } from "@/components/ui/async-select";
 import { apiRoutes } from "@/lib/api-routes";
 import { BookmarkButton } from "@/components/ui/icon-button/bookmark-icon-button";
 
-import { Label } from "@/components/ui/label";
-import { TimePickerInput } from "@/components/ui/time-picker/time-picker-input";
-import { TimePeriodSelect } from "@/components/ui/time-picker/period-select";
-import { Period } from "@/components/ui/time-picker/time-picker-utils";
-import {
-  ADAPTER_FORMAT_FULL_ISO,
-  ADAPTER_FORMAT_TIME_ONLY
-} from "@/hooks/useDateToStringAdapter";
-import { useDateTimeInputState } from "@/hooks/useDateInputState";
-
 const tabs = [
   { title: "Dashboard", icon: Home },
   { title: "Notifications", icon: Bell },
@@ -33,10 +23,8 @@ const tabs = [
   { title: "Security", icon: Shield }
 ];
 
-import { utc } from "@date-fns/utc";
-import { format } from "date-fns";
-import { TimePicker } from "@/components/form/TimePicker";
 import { RelativeTimeCard } from "@/components/ui/relative-time-card";
+import { SortableGridDemo } from "./SortableGrid";
 
 export function TabsDemo() {
   return (
@@ -69,7 +57,7 @@ function CardsCarouselDemo() {
   );
 }
 
-function Demo() {
+function AsyncSelectDemo() {
   const [selectedUser, setSelectedUser] = useState<any>();
   return (
     <AsyncSelect<any>
@@ -113,18 +101,23 @@ function Demo() {
     />
   );
 }
+
 const date = new Date();
 
 export function Scratch() {
   return (
     <div className='pb-40'>
+      {/* <div className='max-w-[36rem]'>
+        <SortableGridDemo />
+      </div> */}
+      <br />
       <RelativeTimeCard date={date} />
       <div>
         <BookmarkButton />
       </div>
       <br />
       <br />
-      <Demo />
+      <AsyncSelectDemo />
       <br />
       <br />
       <TabsDemo />
