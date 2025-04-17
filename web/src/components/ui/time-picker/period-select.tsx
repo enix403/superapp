@@ -37,7 +37,7 @@ export const TimePeriodSelect = React.forwardRef<
      */
     if (date) {
       const tempDate = new Date(date);
-      const hours = display12HourValue(date.getHours());
+      const hours = display12HourValue(date.getUTCHours());
       setDate(
         setDateByType(
           tempDate,
