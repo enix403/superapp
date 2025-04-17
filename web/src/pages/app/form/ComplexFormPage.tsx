@@ -104,7 +104,7 @@ function ComplexForm() {
           <div className='px-4 py-4 pb-72'>
             <Button
               className='w-96'
-              effect="expandIcon"
+              effect='expandIcon'
               icon={ArrowRightIcon}
               iconPlacement='right'
             >
