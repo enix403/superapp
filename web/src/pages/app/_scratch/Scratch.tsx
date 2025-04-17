@@ -57,7 +57,7 @@ function Demo() {
   const [selectedUser, setSelectedUser] = useState<any>();
   return (
     <AsyncSelect<any>
-      fetcher={(query) => apiRoutes.getUsers({ fullName: query })}
+      fetcher={query => apiRoutes.getUsers({ fullName: query })}
       renderOption={user => (
         <div className='flex items-center gap-2'>
           <img

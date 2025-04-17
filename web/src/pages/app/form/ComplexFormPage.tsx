@@ -9,6 +9,7 @@ import { SimpleFormItem } from "@/components/form/SimpleFormItem";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DatePicker } from "@/components/form/DatePicker";
+import { ArrowRightIcon } from "lucide-react";
 
 /* ============================ */
 
@@ -100,7 +101,16 @@ function ComplexForm() {
               </SimpleFormItem>
             )}
           />
-          <Button className='w-96'>Done</Button>
+          <div className='px-4 py-4 pb-72'>
+            <Button
+              className='w-96'
+              effect="expandIcon"
+              icon={ArrowRightIcon}
+              iconPlacement='right'
+            >
+              Done
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
