@@ -36,6 +36,7 @@ const tabs = [
 import { utc } from "@date-fns/utc";
 import { format } from "date-fns";
 import { TimePicker } from "@/components/form/TimePicker";
+import { RelativeTimeCard } from "@/components/ui/relative-time-card";
 
 export function TabsDemo() {
   return (
@@ -112,10 +113,12 @@ function Demo() {
     />
   );
 }
+const date = new Date();
 
 export function Scratch() {
   return (
     <div className='pb-40'>
+      <RelativeTimeCard date={date} />
       <div>
         <BookmarkButton />
       </div>
