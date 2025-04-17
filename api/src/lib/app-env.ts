@@ -83,6 +83,10 @@ export const appEnv = {
   // Application
   CLIENT_URL: requireEnv("CLIENT_URL"),
   MODEL_SERVICE_URL: requireEnv("MODEL_SERVICE_URL"),
+  // Cloudinary
+  CLOUDINARY_CLOUD_NAME: requireEnv("CLOUDINARY_CLOUD_NAME"),
+  CLOUDINARY_API_KEY: requireEnv("CLOUDINARY_API_KEY"),
+  CLOUDINARY_API_SECRET: requireEnv("CLOUDINARY_API_SECRET"),
   // Database
   MONGO_URL: requireEnv("MONGO_URL"),
   // Mail
