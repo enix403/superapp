@@ -10,6 +10,8 @@ import {
   MinimalCardImage,
   MinimalCardTitle
 } from "@/components/ui/minimal-card";
+import { AsyncSelect } from "@/components/ui/async-select";
+import { apiRoutes } from "@/lib/api-routes";
 
 const tabs = [
   { title: "Dashboard", icon: Home },
@@ -51,9 +53,57 @@ function CardsCarouselDemo() {
   );
 }
 
+function Demo() {
+  const [selectedUser, setSelectedUser] = useState<any>();
+  return (
+    <AsyncSelect<any>
+      fetcher={(query) => apiRoutes.getUsers({ fullName: query })}
+      renderOption={user => (
+        <div className='flex items-center gap-2'>
+          <img
+            src={"/profile_img_01.png"}
+            alt={user.name}
+            width={24}
+            height={24}
+            className='rounded-full'
+          />
+          <div className='flex flex-col'>
+            <div className='font-medium'>{user.fullName}</div>
+            <div className='text-xs text-muted-foreground'>{user.role}</div>
+          </div>
+        </div>
+      )}
+      getOptionValue={user => user.id}
+      getDisplayValue={user => (
+        <div className='flex items-center gap-2'>
+          <img
+            src={"/profile_img_01.png"}
+            alt={user.name}
+            width={24}
+            height={24}
+            className='rounded-full'
+          />
+          <div className='flex flex-col'>
+            <div className='font-medium'>{user.fullName}</div>
+          </div>
+        </div>
+      )}
+      notFound={<div className='py-6 text-center text-sm'>No users found</div>}
+      label='User'
+      placeholder='Search users...'
+      value={selectedUser}
+      onChange={setSelectedUser}
+      width='375px'
+    />
+  );
+}
+
 export function Scratch() {
   return (
     <div className='pb-40'>
+      <Demo />
+      <br />
+      <br />
       <TabsDemo />
       <AnimatedNumberRandom value={490} diff={0} />
       <AnimatedNumberCountdown endDate={new Date("2025-12-31")} />
@@ -61,7 +111,7 @@ export function Scratch() {
       <MinimalCard className='my-4 w-[460px]'>
         <MinimalCardImage
           className='h-[320px]'
-          src="https://skiper-ui.com/card/1.png"
+          src='https://skiper-ui.com/card/1.png'
         />
         <MinimalCardTitle>{"Sick title"}</MinimalCardTitle>
         <MinimalCardDescription>
