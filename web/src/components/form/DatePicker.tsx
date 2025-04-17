@@ -31,17 +31,7 @@ export function DatePicker({
   onBlur?: () => void;
   disabled?: boolean;
 }) {
-  /* const [dateISO, setDateISO] = useMaybeControlled<string | undefined>({
-    defaultValue,
-    value,
-    onChange
-  });
 
-  const [date, setDate, isDateValid] = useDateToStringAdapter(
-    dateISO,
-    setDateISO,
-    ADAPTER_FORMAT_DATE_ONLY
-  ); */
   const [date, setDate, isDateValid] = useDateTimeInputState({
     defaultValue,
     value,
