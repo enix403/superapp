@@ -1,5 +1,6 @@
 "use client";
 
+import { SimpleFormItem } from "@/components/form/SimpleFormItem";
 import { Button } from "@/components/ui/button";
 import {
   FileUpload,
@@ -12,12 +13,28 @@ import {
   FileUploadList,
   FileUploadTrigger
 } from "@/components/ui/file-upload";
+import { FormField } from "@/components/ui/form";
+import { useMaybeControlled } from "@/hooks/useMaybeControlled";
 import { Upload, X } from "lucide-react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 import { toast } from "sonner";
 
-function FileUploadBlock() {
-  const [files, setFiles] = React.useState<File[]>([]);
+function FileUploadBlock({
+  value,
+  onChange
+}: {
+  value?: File[];
+  onChange?: (files: File[]) => void;
+}) {
+  const [filesT, setFiles] = useMaybeControlled<File[]>({
+    value,
+    onChange,
+    defaultValue: []
+  });
+
+  const files = filesT!;
 
   const onFileReject = React.useCallback((file: File, message: string) => {
     toast(message, {
@@ -124,10 +141,46 @@ function FileUploadBlock() {
 }
 
 export function Scratch() {
+  const form = useForm({
+    defaultValues: {
+      images: []
+    },
+    mode: "onBlur"
+  });
+
+  const onSubmit = values => {
+    console.log(values);
+  };
 
   return (
     <div className='pb-40'>
-      <FileUploadBlock />
+      <p>{form.getValues("images").length}</p>
+      <Form {...form}>
+        <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>
+          <FormField
+            name='images'
+            rules={{
+              validate: images =>
+                images.length > 0 || "Please upload at least one image"
+            }}
+            render={({ field }) => (
+              <SimpleFormItem
+                label='Images'
+                desc='Upload your images here'
+                noControl
+              >
+                <FileUploadBlock
+                  value={field.value}
+                  onChange={field.onChange}
+                />
+              </SimpleFormItem>
+            )}
+          />
+          <Button className='mt-4' effect='gooeyRight' type='submit'>
+            Upload
+          </Button>
+        </form>
+      </Form>
     </div>
   );
 }
