@@ -15,7 +15,7 @@ import {
   ResetPasswordCompletedPage,
   ResetPasswordPage
 } from "./pages/auth/ResetPassword";
-import { Scratch } from "./pages/_scratch/Scratch";
+// import { Scratch } from "./pages/_scratch/Scratch";
 import { CoreApp } from "./pages/app/CoreApp";
 import { LogoutHandler } from "./pages/auth/LogoutHandler";
 import { SignUpPage } from "./pages/auth/SignUpPage";
@@ -61,7 +61,7 @@ export function App() {
       <BrowserRouter>
         {/* prettier-ignore */}
         <Routes>
-          <Route path='/s' element={<Scratch />} />
+          {/* <Route path='/s' element={<Scratch />} /> */}
           <Route path='' element={<HomePage />} />
           <Route path="/auth">
             <Route

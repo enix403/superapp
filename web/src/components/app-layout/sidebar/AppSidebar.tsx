@@ -15,6 +15,11 @@ import { unslashEnd } from "@/lib/utils";
 
 const items = [
   {
+    path: "/s",
+    label: "Scratch",
+    Icon: Frame
+  },
+  {
     path: "/",
     label: "Dashboard",
     Icon: Frame
