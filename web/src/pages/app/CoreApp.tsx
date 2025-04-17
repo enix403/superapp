@@ -41,7 +41,7 @@ export function CoreApp() {
     <SideRoutesProvider.Provider value={items}>
       <Routes>
         {items.map(({ path, Comp }) => (
-          <Route path={path} element={<Comp />} />
+          <Route key={path} path={path} element={<Comp />} />
         ))}
       </Routes>
     </SideRoutesProvider.Provider>

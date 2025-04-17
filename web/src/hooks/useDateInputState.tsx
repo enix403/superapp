@@ -10,7 +10,7 @@ export function useDateTimeInputState({
   defaultValue?: string;
   value?: string;
   onChange?: (val: string | undefined) => void;
-  stringFormat: string;
+  stringFormat: string | ((date: Date | undefined) => string | undefined);
 }) {
   const [dateString, setDateString] = useMaybeControlled<string | undefined>({
     defaultValue,

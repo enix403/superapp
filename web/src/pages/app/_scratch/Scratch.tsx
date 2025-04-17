@@ -18,7 +18,10 @@ import { Label } from "@/components/ui/label";
 import { TimePickerInput } from "@/components/ui/time-picker/time-picker-input";
 import { TimePeriodSelect } from "@/components/ui/time-picker/period-select";
 import { Period } from "@/components/ui/time-picker/time-picker-utils";
-import { ADAPTER_FORMAT_FULL_ISO, ADAPTER_FORMAT_TIME_ONLY } from "@/hooks/useDateToStringAdapter";
+import {
+  ADAPTER_FORMAT_FULL_ISO,
+  ADAPTER_FORMAT_TIME_ONLY
+} from "@/hooks/useDateToStringAdapter";
 import { useDateTimeInputState } from "@/hooks/useDateInputState";
 
 const tabs = [
@@ -131,7 +134,7 @@ function TimePicker12Demo({
     value,
     onChange,
     // stringFormat: ADAPTER_FORMAT_TIME_ONLY
-    stringFormat: ADAPTER_FORMAT_FULL_ISO
+    stringFormat: date => date?.toISOString()
   });
 
   return (
