@@ -12,33 +12,10 @@ import {
 } from "@/components/ui/sidebar";
 import { NavLink, Link, useLocation, useMatch } from "react-router";
 import { unslashEnd } from "@/lib/utils";
+import { SideRouteItem, SideRoutesProvider } from "./SideRoutesProvider";
+import { useContext } from "react";
 
-const items = [
-  {
-    path: "/s",
-    label: "Scratch",
-    Icon: Frame
-  },
-  {
-    path: "/",
-    label: "Dashboard",
-    Icon: Frame
-  },
-  {
-    path: "/table",
-    label: "Data Table",
-    Icon: Frame
-  },
-  {
-    path: "/form",
-    label: "Complex Form",
-    Icon: Frame
-  }
-];
-
-type SidebarItem = (typeof items)[number];
-
-function AppSidebarItem({ item }: { item: SidebarItem }) {
+function AppSidebarItem({ item }: { item: SideRouteItem }) {
   const path = unslashEnd(urlJoin("/app", item.path));
   const isActive = useMatch(path);
 
@@ -59,6 +36,8 @@ function AppSidebarItem({ item }: { item: SidebarItem }) {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const items = useContext(SideRoutesProvider);
+
   return (
     <Sidebar collapsible='icon' {...props}>
       <SidebarContent>
