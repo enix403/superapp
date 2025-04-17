@@ -10,7 +10,11 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useMaybeControlled } from "@/hooks/useMaybeControlled";
-import { useDateToStringAdapter, ADAPTER_FORMAT_DATE_ONLY } from "@/hooks/useDateToStringAdapter";
+import {
+  useDateToStringAdapter,
+  ADAPTER_FORMAT_DATE_ONLY
+} from "@/hooks/useDateToStringAdapter";
+import { useDateTimeInputState } from "@/hooks/useDateInputState";
 
 // onBlur
 // TODO: receive and forward more props to react-day-picker
@@ -27,7 +31,7 @@ export function DatePicker({
   onBlur?: () => void;
   disabled?: boolean;
 }) {
-  const [dateISO, setDateISO] = useMaybeControlled<string | undefined>({
+  /* const [dateISO, setDateISO] = useMaybeControlled<string | undefined>({
     defaultValue,
     value,
     onChange
@@ -37,7 +41,13 @@ export function DatePicker({
     dateISO,
     setDateISO,
     ADAPTER_FORMAT_DATE_ONLY
-  );
+  ); */
+  const [date, setDate, isDateValid] = useDateTimeInputState({
+    defaultValue,
+    value,
+    onChange,
+    stringFormat: ADAPTER_FORMAT_DATE_ONLY
+  });
 
   return (
     <Popover
