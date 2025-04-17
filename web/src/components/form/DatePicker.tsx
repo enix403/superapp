@@ -7,15 +7,35 @@ import {
 
 import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, ParamVoidCallback } from "@/lib/utils";
 import { Calendar } from "@/components/ui/calendar";
 import { useMaybeControlled } from "@/hooks/useMaybeControlled";
+import { useCallback } from "react";
 
 function toUTCISO(date: Date): string {
   return format(date, "yyyy-MM-dd'T'00:00:00'Z'");
 }
 
+function useMappedState<T, R>(
+  value: T,
+  setValue: ParamVoidCallback<T>,
+  mapFunc: (val: T) => R,
+  unmapFunc: (val: R) => T
+) {
+  const mapped = mapFunc(value);
+  const setMapped = useCallback(
+    (mapped: R) => {
+      setValue(unmapFunc(mapped));
+    },
+    [unmapFunc, setValue]
+  );
 
+  return [mapped, setMapped] as const;
+}
+
+function useDateToStringAdapter() {
+
+}
 
 // onBlur
 // TODO: receive and forward more props to react-day-picker
@@ -38,7 +58,12 @@ export function DatePicker({
     onChange
   });
 
-  const date = new Date(dateISO ?? "invalid");
+  const [date, setDate] = useMappedState(
+    dateISO,
+    setDateISO,
+    dateISO => new Date(dateISO ?? "invalid") as Date | undefined,
+    date => (date ? format(date, "yyyy-MM-dd'T'00:00:00'Z'") : undefined)
+  );
   // https://stackoverflow.com/a/1353711
   // @ts-ignore
   const isDateValid = !isNaN(date);
@@ -60,7 +85,7 @@ export function DatePicker({
             !value && "text-muted-foreground"
           )}
         >
-          {isDateValid ? format(date, "PPP") : <span>Pick a date</span>}
+          {isDateValid ? format(date!, "PPP") : <span>Pick a date</span>}
           <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
         </Button>
         {/* </FormControl> */}
@@ -69,9 +94,10 @@ export function DatePicker({
         <Calendar
           mode='single'
           selected={isDateValid ? date : undefined}
-          onSelect={(newDate: Date | undefined) => {
-            setDateISO(newDate ? toUTCISO(newDate) : undefined);
-          }}
+          onSelect={setDate}
+          // onSelect={(newDate: Date | undefined) => {
+            // setDateISO(newDate ? toUTCISO(newDate) : undefined);
+          // }}
           // disabled={date => date > new Date() || date < new Date("1900-01-01")}
           initialFocus
         />
