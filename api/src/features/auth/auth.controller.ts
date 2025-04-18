@@ -109,8 +109,8 @@ router.add(
       role: "user",
       ...(!appEnv.REQUIRED_SIGN_UP_VERIFICATION
         ? {
-            isVerified: true
-          }
+          isVerified: true
+        }
         : {})
     }).save();
 
