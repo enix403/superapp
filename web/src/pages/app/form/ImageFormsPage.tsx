@@ -14,9 +14,13 @@ import { uploadFiles } from "@/components/form/file-input/uploading";
 
 import { useMutation } from "@tanstack/react-query";
 import { apiRoutes } from "@/lib/api-routes";
+import { useAuthState } from "@/stores/auth-store";
 
 export function useUpdateAvatar() {
   const queryClient = useQueryClient();
+  const { token } = useAuthState();
+
+  const queryKey = ["me", token];
 
   return useMutation({
     mutationFn: async (base64Image: string | null) => {
@@ -33,11 +37,11 @@ export function useUpdateAvatar() {
 
     // Optimistic update
     onMutate: async (newAvatar: string | null) => {
-      await queryClient.cancelQueries({ queryKey: ["me"] });
+      await queryClient.cancelQueries({ queryKey: queryKey });
 
-      const previousUser = queryClient.getQueryData(["me"]);
+      const previousUser = queryClient.getQueryData(queryKey);
 
-      queryClient.setQueryData(["me"], (old: any) => ({
+      queryClient.setQueryData(queryKey, (old: any) => ({
         ...old,
         profilePictureUrl: newAvatar ? "" : null // temporary empty string if uploading
       }));
@@ -46,7 +50,8 @@ export function useUpdateAvatar() {
     },
 
     onSuccess: newUrl => {
-      queryClient.setQueryData(["me"], (old: any) => ({
+      console.log(newUrl);
+      queryClient.setQueryData(queryKey, (old: any) => ({
         ...old,
         profilePictureUrl: newUrl
       }));
@@ -54,7 +59,7 @@ export function useUpdateAvatar() {
 
     onError: (_err, _vars, context) => {
       if (context?.previousUser) {
-        queryClient.setQueryData(["me"], context.previousUser);
+        queryClient.setQueryData(queryKey, context.previousUser);
       }
     }
   });
