@@ -97,8 +97,8 @@ export const appEnv = {
   // MISC
   REQUIRED_SIGN_UP_VERIFICATION: toBool(
     getEnv("REQUIRED_SIGN_UP_VERIFICATION", true)
-  )
-
+  ),
+  STRIPE_SECRET: requireEnv("STRIPE_SECRET")
 };
 
 if (hasMissing) {
