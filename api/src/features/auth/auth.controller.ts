@@ -306,10 +306,9 @@ router.add(
     method: "PATCH",
     desc: "Updates a user with new details.",
     schema: {
-      params: Joi.object({ id: Joi.string().required() }),
       body: Joi.object({
         fullName: Joi.string().optional(),
-        profilePictureUrl: Joi.string().optional(),
+        profilePictureUrl: Joi.string().allow(null).optional(), // <-- allows null for removing avatar
         bio: Joi.string().optional(),
         gender: Joi.string().valid("male", "female").optional(),
         dateOfBirth: Joi.date().optional(),

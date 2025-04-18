@@ -8,6 +8,57 @@ import { AvatarChanger } from "@/components/form/file-input/AvatarChanger";
 import { CoveredImageUpload } from "@/components/form/file-input/CoveredImageUpload";
 import { GenericUpload } from "@/components/form/file-input/GenericUpload";
 import { AppLayout } from "@/components/app-layout/AppLayout";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useQueryClient } from "@tanstack/react-query";
+import { uploadFiles } from "@/components/form/file-input/uploading";
+
+import { useMutation } from "@tanstack/react-query";
+import { apiRoutes } from "@/lib/api-routes";
+
+export function useUpdateAvatar() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (base64Image: string | null) => {
+      let profilePictureUrl: string | null = null;
+
+      if (base64Image) {
+        const [uploadedUrl] = await uploadFiles([base64Image]);
+        profilePictureUrl = uploadedUrl;
+      }
+
+      await apiRoutes.updateMe({ profilePictureUrl });
+      return profilePictureUrl;
+    },
+
+    // Optimistic update
+    onMutate: async (newAvatar: string | null) => {
+      await queryClient.cancelQueries({ queryKey: ["me"] });
+
+      const previousUser = queryClient.getQueryData(["me"]);
+
+      queryClient.setQueryData(["me"], (old: any) => ({
+        ...old,
+        profilePictureUrl: newAvatar ? "" : null // temporary empty string if uploading
+      }));
+
+      return { previousUser };
+    },
+
+    onSuccess: newUrl => {
+      queryClient.setQueryData(["me"], (old: any) => ({
+        ...old,
+        profilePictureUrl: newUrl
+      }));
+    },
+
+    onError: (_err, _vars, context) => {
+      if (context?.previousUser) {
+        queryClient.setQueryData(["me"], context.previousUser);
+      }
+    }
+  });
+}
 
 export function ImageFormsPage() {
   const form = useForm({
@@ -25,11 +76,19 @@ export function ImageFormsPage() {
     console.log(values);
   };
 
+  const { user } = useCurrentUser();
+  const { mutateAsync: updateAvatar } = useUpdateAvatar();
+
   return (
     <AppLayout>
       <div className='pb-40'>
         {/* <AvatarChanger initialImageSrc='/profile_img_01.png' /> */}
-        <AvatarChanger />
+        <AvatarChanger
+          initialImageSrc={user?.profilePictureUrl}
+          onSave={async (base64Image: string | null) => {
+            await updateAvatar(base64Image);
+          }}
+        />
         <br />
         <Form {...form}>
           <form className='space-y-4' onSubmit={form.handleSubmit(onSubmit)}>

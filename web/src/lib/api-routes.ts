@@ -193,19 +193,20 @@ export const apiRoutes = {
   signUp: payloadDecl(`/auth/sign-up`),
   verifyEmail: payloadDecl(`/auth/verify`),
   login: payloadDecl(`/auth/login`),
-  getMe: jsonDecl(`/auth/me`),
   forgetPasswordInit: payloadDecl(`/auth/forget-password/init`),
   resetPasswordCheck: payloadDecl(`/auth/forget-password/check`),
   resetPassword: payloadDecl(`/auth/forget-password/set`),
+  getMe: jsonDecl(`/auth/me`),
+  updateMe: payloadDecl(`/auth/me`, { method: "PATCH" }),
 
   /* ========================== */
   /* ========== Plan ========== */
   /* ========================== */
-  getPlans: jsonDecl(`/plan/all`),
-  generatePlan: payloadDecl(`/plan/generate`),
-  getPlan: jsonDecl((planId: string) => `/plan/${planId}`),
-  updatePlan: payloadDecl((planId: string) => `/plan/${planId}`),
-  updatePlanCanvas: payloadDecl((planId: string) => `/plan/canvas/${planId}`),
+  // getPlans: jsonDecl(`/plan/all`),
+  // generatePlan: payloadDecl(`/plan/generate`),
+  // getPlan: jsonDecl((planId: string) => `/plan/${planId}`),
+  // updatePlan: payloadDecl((planId: string) => `/plan/${planId}`),
+  // updatePlanCanvas: payloadDecl((planId: string) => `/plan/canvas/${planId}`),
 
   /* ========================== */
   /* ========== Plan ========== */

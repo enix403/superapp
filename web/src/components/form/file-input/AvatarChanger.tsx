@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Pencil, X, Loader2 } from "lucide-react";
 import ReactCrop, {
   type Crop,
@@ -43,6 +43,10 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
 
   const imgRef = useRef<HTMLImageElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setAvatarSrc(initialImageSrc || null);
+  }, [initialImageSrc]);
 
   const onDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
