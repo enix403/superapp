@@ -47,7 +47,7 @@ router.add(
     const user = await User.findOne({
       email,
       isVerified: true,
-      isActive: true,
+      isActive: true
       // creationMethod: "local"
     });
 
@@ -296,6 +296,87 @@ router.add(
     }
 
     return reply(res, user);
+  }
+);
+
+// Update the current user
+router.add(
+  {
+    path: "/me",
+    method: "PATCH",
+    desc: "Updates a user with new details.",
+    schema: {
+      params: Joi.object({ id: Joi.string().required() }),
+      body: Joi.object({
+        fullName: Joi.string().optional(),
+        profilePictureUrl: Joi.string().optional(),
+        bio: Joi.string().optional(),
+        gender: Joi.string().valid("male", "female").optional(),
+        dateOfBirth: Joi.date().optional(),
+        phoneCountryCode: Joi.string().optional(),
+        phoneNumber: Joi.string().optional(),
+        addressCountry: Joi.string().optional(),
+        addressCity: Joi.string().optional(),
+        addressArea: Joi.string().optional(),
+        addressZip: Joi.string().optional()
+      }).unknown(false)
+    },
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    const updates = req.body;
+
+    const user = await User.findByIdAndUpdate(req.user._id, updates, {
+      new: true
+    });
+
+    if (!user) throw new NotFound();
+    return reply(res, user);
+  }
+);
+
+router.add(
+  {
+    path: "/update-password",
+    method: "PATCH",
+    summary: "Update Password",
+    desc: "Allows the currently authenticated user to update their password.",
+    schema: {
+      body: Joi.object({
+        currentPassword: Joi.string().required(),
+        newPassword: Joi.string().required()
+      })
+    },
+    middlewares: [authGuard()]
+  },
+  async (req, res) => {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      throw new NotFound();
+    }
+
+    const isPasswordCorrect = await comparePassword(
+      currentPassword,
+      user.passwordHash || ""
+    );
+
+    if (!isPasswordCorrect) {
+      throw new ApplicationError(
+        "Current password is incorrect",
+        StatusCodes.UNAUTHORIZED,
+        "invalid_password"
+      );
+    }
+
+    const newHash = await hashPassword(newPassword);
+
+    user.passwordHash = newHash;
+    await user.save();
+
+    return reply(res);
   }
 );
 

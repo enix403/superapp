@@ -6,6 +6,8 @@ import { appEnv } from "@/lib/app-env";
 import { reply } from "@/lib/app-reply";
 import { ApplicationError } from "@/lib/errors";
 
+import { authGuard } from "@/guards/auth.guard";
+
 cloudinary.config({
   cloud_name: appEnv.CLOUDINARY_CLOUD_NAME,
   api_key: appEnv.CLOUDINARY_API_KEY,
@@ -26,7 +28,9 @@ router.add(
   {
     path: "/",
     method: "POST",
-    middlewares: [upload.array("files", 10)]
+    summary: "Upload Files",
+    desc: "Uploads multiple files to Cloudinary. Accepts up to 10 files through a multipart/form-data request. Returns the list of secure URLs for the uploaded files.",
+    middlewares: [authGuard(), upload.array("files", 10)]
   },
   async (req, res) => {
     const files = req.files as Express.Multer.File[];

@@ -14,6 +14,7 @@ export interface IUser extends Document<Types.ObjectId> {
 
   /* ====== Optional profile fields ====== */
 
+  profilePictureUrl?: string;
   bio?: string;
   gender?: "male" | "female";
   dateOfBirth?: Date;
@@ -44,6 +45,7 @@ const userSchema = new Schema<IUser>(
 
     /* ======= */
 
+    profilePictureUrl: { type: String },
     bio: { type: String },
     gender: {
       type: String,
