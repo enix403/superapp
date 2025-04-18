@@ -22,8 +22,8 @@ function UserInfo() {
     return (
       <>
         <img
-          src='/profile_img_01.png'
-          alt='Avatar'
+          // src='/profile_img_01.png'
+          src={user.profilePictureUrl || null}
           width={32}
           height={32}
           className='aspect-square shrink-0 rounded-full'
@@ -48,13 +48,15 @@ function UserInfo() {
 }
 
 export function AvatarDropdown() {
+  const { user, isError } = useCurrentUser();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className='relative cursor-pointer'>
           <Avatar className='size-10 border-2 border-[#FFF331]'>
-            <AvatarImage src='/profile_img_01.png' alt='Kelly King' />
-            <AvatarFallback className='text-black'>U</AvatarFallback>
+            <AvatarImage src={user?.profilePictureUrl || null} />
+            <AvatarFallback className='text-black'>{user?.fullName[0]}</AvatarFallback>
           </Avatar>
           {/* <span className='absolute -end-0.5 -bottom-0.5 size-3 rounded-full border-2 border-background bg-emerald-500'>
             <span className='sr-only'>Online</span>

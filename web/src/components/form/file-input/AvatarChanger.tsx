@@ -166,13 +166,13 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
     }
   };
 
-  const handleSave = async () => {
+  const applyImage = async (image: string | null) => {
     try {
       setIsLoading(true);
       if (onSave) {
-        await onSave(previewSrc);
+        await onSave(image);
       }
-      setAvatarSrc(previewSrc);
+      setAvatarSrc(image);
       setIsDialogOpen(false);
     } catch (error) {
       console.error("Error saving image:", error);
@@ -181,11 +181,12 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
     }
   };
 
+  const handleSave = async () => {
+    applyImage(previewSrc);
+  };
+
   const handleRemove = () => {
-    setPreviewSrc(null);
-    if (!isDialogOpen) {
-      setAvatarSrc(null);
-    }
+    applyImage(null);
   };
 
   const openDialog = () => {
@@ -201,7 +202,7 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <Avatar className='h-24 w-24 border'>
-          <AvatarImage src={avatarSrc || ""} />
+          <AvatarImage src={avatarSrc || undefined} />
           <AvatarFallback className='text-lg'>
             {avatarSrc ? "" : "N/A"}
           </AvatarFallback>
@@ -341,14 +342,18 @@ export function AvatarChanger({ initialImageSrc, onSave }: AvatarChangerProps) {
 
           {!isCropping && !isLoading && (
             <DialogFooter className='flex flex-row items-center justify-between sm:justify-between'>
-              <Button
-                variant='outline'
-                onClick={handleRemove}
-                className='text-destructive hover:text-destructive'
-                disabled={!previewSrc}
-              >
-                Remove Picture
-              </Button>
+              <div>
+                {avatarSrc && (
+                  <Button
+                    variant='outline'
+                    onClick={handleRemove}
+                    className='text-destructive hover:text-destructive'
+                    disabled={!previewSrc}
+                  >
+                    Remove Picture
+                  </Button>
+                )}
+              </div>
               <Button onClick={handleSave} disabled={!previewSrc || isLoading}>
                 {isLoading ? (
                   <>

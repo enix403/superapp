@@ -84,7 +84,7 @@ export function ImageFormsPage() {
       <div className='pb-40'>
         {/* <AvatarChanger initialImageSrc='/profile_img_01.png' /> */}
         <AvatarChanger
-          initialImageSrc={user?.profilePictureUrl}
+          initialImageSrc={user?.profilePictureUrl || null}
           onSave={async (base64Image: string | null) => {
             await updateAvatar(base64Image);
           }}

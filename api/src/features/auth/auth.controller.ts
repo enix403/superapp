@@ -325,7 +325,7 @@ router.add(
   async (req, res) => {
     const updates = req.body;
 
-    const user = await User.findByIdAndUpdate(req.user._id, updates, {
+    const user = await User.findByIdAndUpdate(req.user.id, updates, {
       new: true
     });
 
