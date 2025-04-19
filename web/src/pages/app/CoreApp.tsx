@@ -17,6 +17,7 @@ import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage"
 import { CreateCoursePage } from "../teacher/CreateCourseForm";
 import { EditCoursePage } from "../teacher/CreateCourseForm";
 import { CourseCatalogPage } from "../teacher/CourseCatalog";
+import { CourseStudentView } from "../teacher/CourseStudentView";
 
 const items: SideRouteItem[] = [
   {
@@ -42,6 +43,12 @@ const items: SideRouteItem[] = [
     label: "Edit Course",
     Icon: Frame,
     Comp: EditCoursePage
+  },
+  {
+    path: "/view-course/:courseId",
+    label: "Edit Course",
+    Icon: Frame,
+    Comp: CourseStudentView
   },
   {
     path: "/s",
