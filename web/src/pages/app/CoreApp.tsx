@@ -148,7 +148,7 @@ export function CoreApp() {
   const items = useMemo(
     () =>
       user
-        ? user.role === "teacher" && false
+        ? user.role === "teacher"
           ? teacherRoutes
           : studentRoutes
         : [],

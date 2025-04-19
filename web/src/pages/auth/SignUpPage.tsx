@@ -20,7 +20,7 @@ import { useId, useState } from "react";
 import { toast } from "sonner";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-function RolePicker({ value, onChange }) {
+function RolePicker({ value, setValue }) {
   const id = useId();
 
   const items = [
@@ -31,12 +31,12 @@ function RolePicker({ value, onChange }) {
   return (
     <fieldset className='space-y-4'>
       <legend className='text-sm leading-none font-medium text-foreground'>
-        Server location
+        Role
       </legend>
       <RadioGroup
         className='flex flex-wrap gap-2'
         value={value}
-        onSelect={onChange}
+        // onSelect={onChange}
       >
         {items.map(item => (
           <div
@@ -48,6 +48,8 @@ function RolePicker({ value, onChange }) {
               <RadioGroupItem
                 id={`${id}-${item.value}`}
                 value={item.value}
+                checked={item.value === value}
+                onClick={() => setValue(item.value)}
                 className='after:absolute after:inset-0'
               />
               <Label htmlFor={`${id}-${item.value}`}>{item.label}</Label>
@@ -64,6 +66,8 @@ export function SignUpPage() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm();
   const [error, setError] = useState<string | null>(null);
+
+  const [role, setRole] = useState("student");
 
   const signUpMut = useMutation({
     mutationFn: apiRoutes.signUp,
@@ -86,7 +90,7 @@ export function SignUpPage() {
 
     delete values["confirmPassword"];
 
-    signUpMut.mutate({ ...values, role: "teacher" } as any);
+    signUpMut.mutate({ ...values, role } as any);
   });
 
   return (
@@ -133,7 +137,7 @@ export function SignUpPage() {
                     }}
                   />
                   {/* @ts-ignore */}
-                  <RolePicker {...register("role")} />
+                  <RolePicker value={role} setValue={setRole} />
                   <div className='grid gap-2'>
                     <Label>Name</Label>
                     <Input placeholder='Enter name' {...register("fullName")} />
