@@ -82,13 +82,14 @@ router.add(
     schema: {
       body: Joi.object({
         email: Joi.string().email().required(),
+        role: Joi.string().required(),
         password: Joi.string().required(),
         fullName: Joi.string().required()
       })
     }
   },
   async (req, res) => {
-    const { email, password, ...restData } = req.body;
+    const { email, password, role, ...restData } = req.body;
 
     const isUserExist = await User.exists({ email });
 
@@ -106,11 +107,11 @@ router.add(
       ...restData,
       email,
       passwordHash,
-      role: "user",
+      role: role,
       ...(!appEnv.REQUIRED_SIGN_UP_VERIFICATION
         ? {
-            isVerified: true
-          }
+          isVerified: true
+        }
         : {})
     }).save();
 

@@ -34,15 +34,15 @@ const applyAuthToken = async (
         else resolve(decoded as AccessTokenClaims);
       })
     );
-  } catch (err) {}
+  } catch (err) { }
 
   const user =
     claims && Types.ObjectId.isValid(claims.uid)
       ? await User.findOne({
-          _id: claims.uid,
-          isActive: true,
-          isVerified: true
-        }).exec()
+        _id: claims.uid,
+        isActive: true,
+        isVerified: true
+      }).exec()
       : null;
 
   if (user === null) {
@@ -77,8 +77,8 @@ export function authGuard(allowedRoles?: string[]) {
       if (!allowedRoles.includes(userRole)) {
         appLogger.warn(
           `Unauthorized access attempt: Invalid role - ${userRole} not allowed in [` +
-            allowedRoles.join(", ") +
-            "]"
+          allowedRoles.join(", ") +
+          "]"
         );
 
         res.status(StatusCodes.FORBIDDEN).json({ message: "Not allowed" });
