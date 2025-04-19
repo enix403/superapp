@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import {
   DndContext,
@@ -85,6 +85,8 @@ interface VideoFile {
   isUploading: boolean;
 }
 
+let newId = 1;
+
 export function CourseInfoForm({ course }: { course?: any }) {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
@@ -93,32 +95,56 @@ export function CourseInfoForm({ course }: { course?: any }) {
   const [videoFiles, setVideoFiles] = useState<Record<string, VideoFile>>({});
   const [isDragging, setIsDragging] = useState(false);
 
+  const videos = useMemo(() => {
+    // course.videos;
+    const videos: any[] = [];
+    for (const v of course.videos) {
+      const id = `image-id-${newId++}`;
+      videos.push({
+        id: id,
+        ...v
+      });
+    }
+
+    return videos;
+  }, [course]);
+
   // Initialize React Hook Form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: course || {
-      title: "",
-      category: categories[0],
-      desc: "",
-      thumbnail: "",
-      videos: []
-    }
+    defaultValues: course
+      ? {
+          ...course,
+          videos
+        }
+      : {
+          title: "",
+          category: categories[0],
+          desc: "",
+          thumbnail: "",
+          videos: []
+        }
   });
 
   useEffect(() => {
-    if (course.thumbnail)
-      setThumbnailPreview(course.thumbnail);
+    if (course.thumbnail) setThumbnailPreview(course.thumbnail);
   }, [course]);
 
   useEffect(() => {
-    if (course.videos)
-      setVideoFiles(course.videos.map(v => ({
-        file: null,
-        previewUrl: v.videoUrl,
-        videoUrl: v.videoUrl,
-        isUploading: false,
-    })));
-  }, [course]);
+    if (videos) {
+      const files = {};
+      for (const v of videos) {
+        console.log(v);
+        files[v.id] = {
+          file: null,
+          previewUrl: v.videoUrl,
+          videoUrl: v.videoUrl,
+          isUploading: false
+        } as VideoFile;
+      }
+      setVideoFiles(files);
+    }
+  }, [videos]);
 
   // Setup field array for videos
   const { fields, append, remove, move } = useFieldArray({
@@ -224,12 +250,11 @@ export function CourseInfoForm({ course }: { course?: any }) {
       console.log(data);
       data.videos.forEach(v => {
         // @ts-ignore
-        delete v['id'];
+        delete v["id"];
       });
       if (!course) {
         await apiRoutes.createCourse(data);
-      }
-      else {
+      } else {
         await apiRoutes.updateCourse(data, course.id);
       }
 
@@ -435,7 +460,7 @@ export function CourseInfoForm({ course }: { course?: any }) {
                       control={form.control}
                       setVideoFiles={setVideoFiles}
                       videoFile={
-                        videoFiles[video.id] || {
+                        videoFiles[(console.log(video.id), video.id)] || {
                           file: null,
                           previewUrl: null,
                           videoUrl: null,
