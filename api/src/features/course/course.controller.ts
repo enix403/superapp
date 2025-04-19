@@ -3,7 +3,6 @@ import { ApiRouter } from "@/lib/ApiRouter";
 import { reply } from "@/lib/app-reply";
 import { NotFound } from "@/lib/errors";
 import Course from "@/models/course";
-import { User } from "@/models/user";
 import Joi from "joi";
 
 
@@ -80,8 +79,26 @@ router.add(
 );
 
 
+// Get a course
+router.add(
+    {
+        path: "/:id",
+        method: "GET",
+        summary: "GET course details",
 
-// Update a user
+        desc: "GET a course with new details.",
+
+    },
+    async (req, res) => {
+        // throw new ApplicationError("adwa");
+
+        const course = await Course.findById(req.params.id).populate("teacherId")
+        if (!course) throw new NotFound();
+        return reply(res, course);
+    }
+);
+
+// Update a course
 router.add(
     {
         path: "/:id",
@@ -106,6 +123,27 @@ router.add(
         const updates = req.body;
 
         const course = await Course.findOneAndUpdate({ _id: req.params.id, teacherId: req.user.id }, updates, {
+            new: true
+        });
+        if (!course) throw new NotFound();
+        return reply(res, course);
+    }
+);
+
+// Delete a course
+router.add(
+    {
+        path: "/:id",
+        method: "DELETE",
+        summary: "Delete course details",
+        middlewares: [authGuard(["teacher"])],
+
+        desc: "Delete a course.",
+
+    },
+    async (req, res) => {
+
+        const course = await Course.findOneAndDelete({ _id: req.params.id, teacherId: req.user.id }, {
             new: true
         });
         if (!course) throw new NotFound();

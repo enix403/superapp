@@ -84,5 +84,11 @@ userSchema.virtual("courses", {
   foreignField: "teacherId",
 });
 
+userSchema.virtual("enrollments", {
+  ref: "Enrollment",
+  localField: "_id",
+  foreignField: "studentId",
+});
+
 
 export const User = model("User", userSchema);

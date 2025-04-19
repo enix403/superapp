@@ -40,7 +40,11 @@ const courseSchema: Schema<ICourse> = new Schema<ICourse>(
             required: true
         },
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+        toObject: { virtuals: true },
+        toJSON: { virtuals: true }
+    }
 );
 
 
@@ -50,6 +54,13 @@ courseSchema.virtual("teacher", {
     foreignField: "_id",
     justOne: true
 });
+
+courseSchema.virtual("enrollment", {
+    ref: "Enrollment",
+    localField: "_id",
+    foreignField: "courseId",
+});
+
 
 
 const Course: Model<ICourse> = mongoose.model<ICourse>('Course', courseSchema);
