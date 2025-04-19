@@ -16,8 +16,48 @@ import { useForm } from "react-hook-form";
 import { API_BASE_URL, apiRoutes } from "@/lib/api-routes";
 import { AppTopNav } from "@/components/topnav/AppTopNav";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { toast } from "sonner";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
+function RolePicker({ value, onChange }) {
+  const id = useId();
+
+  const items = [
+    { value: "student", label: "Student" },
+    { value: "teacher", label: "Teacher" }
+  ];
+
+  return (
+    <fieldset className='space-y-4'>
+      <legend className='text-sm leading-none font-medium text-foreground'>
+        Server location
+      </legend>
+      <RadioGroup
+        className='flex flex-wrap gap-2'
+        value={value}
+        onSelect={onChange}
+      >
+        {items.map(item => (
+          <div
+            // onClick={() => onChange(item.value)}
+            key={`${id}-${item.value}`}
+            className='relative flex flex-col items-start gap-4 rounded-md border-2 border-input p-3 shadow-xs outline-none has-data-[state=checked]:border-primary/50'
+          >
+            <div className='flex items-center gap-2'>
+              <RadioGroupItem
+                id={`${id}-${item.value}`}
+                value={item.value}
+                className='after:absolute after:inset-0'
+              />
+              <Label htmlFor={`${id}-${item.value}`}>{item.label}</Label>
+            </div>
+          </div>
+        ))}
+      </RadioGroup>
+    </fieldset>
+  );
+}
 
 export function SignUpPage() {
   const setAuthState = useSetAuthState();
@@ -36,6 +76,8 @@ export function SignUpPage() {
   });
 
   const onSubmit = handleSubmit(values => {
+    // console.log(values);
+    // return;
     setError(null);
     if (values["password"] !== values["confirmPassword"]) {
       setError("not_confirmed");
@@ -44,7 +86,7 @@ export function SignUpPage() {
 
     delete values["confirmPassword"];
 
-    signUpMut.mutate(values as any);
+    signUpMut.mutate({ ...values, role: "teacher" } as any);
   });
 
   return (
@@ -90,6 +132,8 @@ export function SignUpPage() {
                       email_taken: "This email is already taken"
                     }}
                   />
+                  {/* @ts-ignore */}
+                  <RolePicker {...register("role")} />
                   <div className='grid gap-2'>
                     <Label>Name</Label>
                     <Input placeholder='Enter name' {...register("fullName")} />

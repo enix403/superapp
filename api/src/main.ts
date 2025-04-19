@@ -152,7 +152,7 @@ async function bootstrap() {
   const bind = getBind();
 
   const listenAt = bind.type === "port" ? bind.port : bind.pipe;
-  server.listen(listenAt);
+  server.listen(listenAt, '0.0.0.0');
 
   server.on("error", (error: { syscall: string; code: string }) => {
     if (error.syscall !== "listen") {

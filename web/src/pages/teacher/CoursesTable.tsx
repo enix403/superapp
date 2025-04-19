@@ -38,7 +38,7 @@ type Item = {
 const columns: ColumnDef<Item>[] = [
   {
     header: "Course",
-    accessorKey: "fullName",
+    accessorKey: "title",
     cell: ({ row }) => (
       // <div className="font-medium">{row.getValue("name")}</div>
       <div className='flex items-center gap-3 truncate'>
@@ -69,7 +69,7 @@ const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => {
       return <div className='truncate text-ellipsis'>{row.original.desc}</div>;
     },
-    size: 200
+    size: 120
   },
   {
     header: "Enrolled Students",
@@ -182,10 +182,9 @@ export function CoursesTable() {
           <div className='flex items-center gap-3'>
             <TextFilter
               table={table}
-              columnName='fullName'
+              columnName='title'
               placeholder='Filter by name or email...'
             />
-            <UniqueValuesFilter table={table} columnName='role' />
             <ColumnVisibilityControl table={table} />
           </div>
           <div className='ml-auto'>
