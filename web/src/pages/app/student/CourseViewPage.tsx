@@ -3,7 +3,7 @@ import { ChevronLeft, Play, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { useParams } from "react-router";
+import { Link, useParams } from "react-router";
 import { AppLayout } from "@/components/app-layout/AppLayout";
 import { apiRoutes } from "@/lib/api-routes";
 
@@ -31,7 +31,7 @@ interface Course {
   videos: Video[];
 }
 
-export function CourseStudentView() {
+export function CourseViewPage() {
   const { courseId } = useParams<{ courseId: string }>();
   const [course, setCourse] = useState<Course | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
@@ -88,19 +88,22 @@ export function CourseStudentView() {
     setSelectedVideo(video);
   };
 
-  if (!course) return <p className='p-8'>Loading course...</p>;
+  if (!course)
+    return (
+      <AppLayout title='View Course'>
+        <p className='p-8'>Loading course...</p>
+      </AppLayout>
+    );
 
   return (
     <AppLayout title='View Course'>
       <div className='mx-auto px-10 py-8'>
-        <Button
-          variant='ghost'
-          className='mb-6 flex items-center gap-1'
-          onClick={() => alert("Navigating back to course catalog")}
-        >
-          <ChevronLeft className='h-4 w-4' />
-          Back to Courses
-        </Button>
+        <Link to='/app'>
+          <Button variant='ghost' className='mb-6 flex items-center gap-1'>
+            <ChevronLeft className='h-4 w-4' />
+            Back to Courses
+          </Button>
+        </Link>
 
         <div className='mb-5 flex items-center justify-between rounded-xl bg-gray-50 p-6'>
           <div>

@@ -190,7 +190,7 @@ function CourseCatalog() {
       {courses.length > 0 ? (
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
           {courses.map(course => (
-            <Link to={`/app/view-course/${course["_id"]}`}>
+            <Link to={`/app/course/${course["_id"]}`}>
               <Card
                 key={course["_id"]}
                 className='cursor-pointer overflow-hidden transition-shadow duration-300 hover:shadow-lg'

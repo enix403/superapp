@@ -14,7 +14,8 @@ import { useMemo } from "react";
 import { DashboardPage as TeacherDashboardPage } from "./teacher/dashboard/DashboardPage";
 import { CreateCoursePage } from "./teacher/course/CreateCoursePage";
 import { EditCoursePage } from "./teacher/course/EditCoursePage";
-
+import { CourseCatalogPage } from "./student/CourseCatalogPage";
+import { CourseViewPage } from "./student/CourseViewPage";
 
 const items: SideRouteItem[] = [
   /* {
@@ -124,14 +125,33 @@ const teacherRoutes: SideRouteItem[] = [
     hide: true
   }
 ];
-const studentRoutes: SideRouteItem[] = [];
+
+const studentRoutes: SideRouteItem[] = [
+  {
+    path: "/",
+    label: "Courses Catalog",
+    Icon: Frame,
+    Comp: CourseCatalogPage
+  },
+  {
+    path: "/course/:courseId",
+    label: "",
+    Icon: Frame,
+    Comp: CourseViewPage,
+    hide: true
+  }
+];
 
 export function CoreApp() {
   const { user } = useCurrentUser();
 
   const items = useMemo(
     () =>
-      user ? (user.role === "teacher" ? teacherRoutes : studentRoutes) : [],
+      user
+        ? user.role === "teacher" && false
+          ? teacherRoutes
+          : studentRoutes
+        : [],
     [user]
   );
 
@@ -139,10 +159,9 @@ export function CoreApp() {
     <SideRoutesProvider.Provider value={items}>
       <Routes>
         {/* <Route path='' element={<Navigate to='dashboard' replace />} /> */}
-        {items
-          .map(({ path, Comp }) => (
-            <Route key={path} path={path} element={<Comp />} />
-          ))}
+        {items.map(({ path, Comp }) => (
+          <Route key={path} path={path} element={<Comp />} />
+        ))}
       </Routes>
     </SideRoutesProvider.Provider>
   );
