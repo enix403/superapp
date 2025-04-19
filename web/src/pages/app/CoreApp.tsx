@@ -46,7 +46,7 @@ const items: SideRouteItem[] = [
   },
   {
     path: "/view-course/:courseId",
-    label: "Edit Course",
+    label: "View Course",
     Icon: Frame,
     Comp: CourseStudentView
   },

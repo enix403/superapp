@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
 import {
   DndContext,
@@ -105,6 +105,21 @@ export function CourseInfoForm({ course }: { course?: any }) {
     }
   });
 
+  useEffect(() => {
+    if (course.thumbnail)
+      setThumbnailPreview(course.thumbnail);
+  }, [course]);
+
+  useEffect(() => {
+    if (course.videos)
+      setVideoFiles(course.videos.map(v => ({
+        file: null,
+        previewUrl: v.videoUrl,
+        videoUrl: v.videoUrl,
+        isUploading: false,
+    })));
+  }, [course]);
+
   // Setup field array for videos
   const { fields, append, remove, move } = useFieldArray({
     control: form.control,
@@ -206,26 +221,6 @@ export function CourseInfoForm({ course }: { course?: any }) {
     // API call would go here
     try {
       // INTEGRATION POINT: API call to create course
-      // const response = await fetch('/api/courses', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     title: data.title,
-      //     description: data.desc,
-      //     thumbnail: data.thumbnail,
-      //     videos: data.videos,
-      //   }),
-      // })
-      //
-      // if (!response.ok) {
-      //   throw new Error('Failed to create course')
-      // }
-      //
-      // const result = await response.json()
-      // Router.push(`/teacher/courses/${result.courseId}`)
-
       console.log(data);
       data.videos.forEach(v => {
         // @ts-ignore
