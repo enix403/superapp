@@ -10,6 +10,7 @@ import { useQuery } from "@tanstack/react-query";
 import { apiRoutes } from "@/lib/api-routes";
 import { AppLayout } from "@/components/app-layout/AppLayout";
 import { categories } from "@/lib/constants";
+import { Link } from "react-router";
 
 interface Course {
   id: number;
@@ -179,10 +180,10 @@ function CourseCatalog() {
       {courses.length > 0 ? (
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
           {courses.map(course => (
+            <Link to={`/app/course/${course['_id']}`}>
             <Card
-              key={course.id}
+              key={course['_id']}
               className='cursor-pointer overflow-hidden transition-shadow duration-300 hover:shadow-lg'
-              onClick={() => alert(`Navigate to course ${course.id}`)}
             >
               <img
                 src={course.image}
@@ -201,6 +202,7 @@ function CourseCatalog() {
                 </p>
               </CardContent>
             </Card>
+            </Link>
           ))}
         </div>
       ) : (

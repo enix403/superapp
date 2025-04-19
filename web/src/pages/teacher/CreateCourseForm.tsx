@@ -96,7 +96,7 @@ export function CourseInfoForm({ course }: { course?: any }) {
   // Initialize React Hook Form
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: course || {
       title: "",
       category: categories[0],
       desc: "",
