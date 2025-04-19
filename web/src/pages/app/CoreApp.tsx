@@ -13,6 +13,7 @@ import { AsyncSelectPage } from "./dashboard/AsyncSelectPage";
 import { MiscPage } from "./dashboard/MiscPage";
 import { SortableGridPage } from "./dashboard/SortableGridPage";
 import { ProfilePage } from "./profile/ProfilePage";
+import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
 
 const items: SideRouteItem[] = [
   {
@@ -68,6 +69,12 @@ const items: SideRouteItem[] = [
     label: "My Profile",
     Icon: Frame,
     Comp: ProfilePage
+  },
+  {
+    path: "/teacher-dashboard",
+    label: "Teacher Dashboard",
+    Icon: Frame,
+    Comp: TeacherDashboardPage
   }
 ];
 
