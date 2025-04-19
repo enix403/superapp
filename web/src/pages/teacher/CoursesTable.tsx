@@ -30,7 +30,7 @@ type Item = {
   id: string;
   title: string;
   desc: string;
-  thumbnailUrl: string;
+  thumbnail: string;
   videos: any[];
   enrollments: any[];
 };
@@ -45,7 +45,8 @@ const columns: ColumnDef<Item>[] = [
         <img
           className='h-32 max-h-32'
           src={
-            "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg"
+            // "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg"
+            row.original.thumbnail
           }
           alt={"User"}
         />
@@ -105,7 +106,7 @@ const columns: ColumnDef<Item>[] = [
   }
 ];
 
-const listQueryKey = ["users", "list"];
+const listQueryKey = ["courses", "list", "mine"];
 
 const useOptimisticDelete = (
   mutationFn: (payload: any) => Promise<unknown>
@@ -142,27 +143,30 @@ const useOptimisticDelete = (
 };
 
 export function CoursesTable() {
-  // const { data = [] } = useQuery({
-  //   queryKey: listQueryKey,
-  //   queryFn: () => apiRoutes.getUsers()
-  // });
+  const { data = [] } = useQuery({
+    queryKey: listQueryKey,
+    // queryFn: () => apiRoutes.getMyCourses()
+    queryFn: () => apiRoutes.getCourses()
+  });
 
   const deleteMutation = useOptimisticDelete(apiRoutes.deleteUser);
   const batchDeleteMutation = useOptimisticDelete((userIds: string[]) =>
     apiRoutes.deleteUsersBatch({ ids: userIds })
   );
 
-  const data: Item[] = [
-    {
-      id: "0",
-      title: "hello",
-      desc: "dawwaaw",
-      thumbnailUrl:
-        "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-      videos: ["dawwa", "DAWwa"],
-      enrollments: ["1", "dwawa"]
-    }
-  ];
+  console.log(data);
+
+  // const data: Item[] = [
+  //   {
+  //     id: "0",
+  //     title: "hello",
+  //     desc: "dawwaaw",
+  //     thumbnail:
+  //       "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
+  //     videos: ["dawwa", "DAWwa"],
+  //     enrollments: ["1", "dwawa"]
+  //   }
+  // ];
 
   return (
     <AppDataTable

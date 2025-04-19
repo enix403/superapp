@@ -218,6 +218,16 @@ export const apiRoutes = {
   deleteUser: jsonDecl((userId: string) => `/users/${userId}`, { method: "DELETE" }),
   deleteUsersBatch: payloadDecl(`/users/batch-delete`, { method: "DELETE" }),
 
+  /* ========================== */
+  /* ========== Plan ========== */
+  /* ========================== */
+  // getUsers: jsonDecl(wq`/users`),
+  getCourse: jsonDecl((courseId: string) => `/course/${courseId}`),
+  getMyCourses: jsonDecl(`/course/get-my-courses`),
+  getCourses: jsonDecl(`/course`),
+  createCourse: payloadDecl(`/course`),
+  updateCourse: payloadDecl((courseId: string) => `/course/${courseId}`, { method: "PATCH" }),
+
 } as const;
 
 if (typeof window !== "undefined") {

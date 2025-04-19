@@ -54,21 +54,22 @@ import {
 } from "@/components/ui/select";
 import { SimpleFormItem } from "@/components/form/SimpleFormItem";
 import { categories } from "@/lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router";
+import { apiRoutes } from "@/lib/api-routes";
 
 // Form validation schema
 const formSchema = z.object({
-  courseTitle: z.string().min(3, "Title must be at least 3 characters"),
-  courseDescription: z
-    .string()
-    .min(10, "Description must be at least 10 characters"),
-  courseCategory: z.string().nonempty(),
-  thumbnailUrl: z.string().optional(),
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  desc: z.string().min(10, "Description must be at least 10 characters"),
+  category: z.string().nonempty(),
+  thumbnail: z.string().optional(),
   videos: z
     .array(
       z.object({
         id: z.string(),
         title: z.string().min(3, "Video title must be at least 3 characters"),
-        description: z.string(),
+        desc: z.string(),
         videoUrl: z.string().optional()
       })
     )
@@ -84,7 +85,7 @@ interface VideoFile {
   isUploading: boolean;
 }
 
-export function CreateCoursePage() {
+export function CourseInfoForm({ course }: { course?: any }) {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [thumbnailPreview, setThumbnailPreview] = useState<string | null>(null);
   const [thumbnailUrl, setThumbnailUrl] = useState<string | null>(null);
@@ -96,10 +97,10 @@ export function CreateCoursePage() {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      courseTitle: "",
-      courseCategory: categories[0],
-      courseDescription: "",
-      thumbnailUrl: "",
+      title: "",
+      category: categories[0],
+      desc: "",
+      thumbnail: "",
       videos: []
     }
   });
@@ -136,7 +137,7 @@ export function CreateCoursePage() {
         setIsUploadingThumbnail(true);
         const urls = await uploadFiles([file]);
         setThumbnailUrl(urls[0]);
-        form.setValue("thumbnailUrl", urls[0]);
+        form.setValue("thumbnail", urls[0]);
         toast.success("Thumbnail uploaded successfully");
       } catch (error) {
         console.error("Error uploading thumbnail:", error);
@@ -152,7 +153,7 @@ export function CreateCoursePage() {
     append({
       id: newVideoId,
       title: "",
-      description: "",
+      desc: "",
       videoUrl: ""
     });
     setVideoFiles({
@@ -211,9 +212,9 @@ export function CreateCoursePage() {
       //     'Content-Type': 'application/json',
       //   },
       //   body: JSON.stringify({
-      //     title: data.courseTitle,
-      //     description: data.courseDescription,
-      //     thumbnailUrl: data.thumbnailUrl,
+      //     title: data.title,
+      //     description: data.desc,
+      //     thumbnail: data.thumbnail,
       //     videos: data.videos,
       //   }),
       // })
@@ -225,9 +226,19 @@ export function CreateCoursePage() {
       // const result = await response.json()
       // Router.push(`/teacher/courses/${result.courseId}`)
 
-      console.log("Form submitted successfully", {
-        courseData: data
+      console.log(data);
+      data.videos.forEach(v => {
+        // @ts-ignore
+        delete v['id'];
       });
+      if (!course) {
+        await apiRoutes.createCourse(data);
+      }
+      else {
+        await apiRoutes.updateCourse(data, course.id);
+      }
+
+      console.log("Form submitted successfully");
 
       toast.success("Course created");
     } catch (error) {
@@ -238,248 +249,271 @@ export function CreateCoursePage() {
   };
 
   return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+        <Card>
+          <CardContent className='pt-0'>
+            <div className='space-y-4'>
+              <FormField
+                control={form.control}
+                name='title'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-base'>Course Title</FormLabel>
+                    <FormControl>
+                      <Input placeholder='Enter course title' {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                name='category'
+                render={({ field }) => (
+                  <SimpleFormItem label='Course Category' noControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Select a category' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories.map(cat => (
+                          <SelectItem key={cat} value={cat}>
+                            {cat}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </SimpleFormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name='desc'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-base'>
+                      Course Description
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder='Enter course description'
+                        className='min-h-[120px]'
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div>
+                <Label htmlFor='thumbnail' className='text-base'>
+                  Course Thumbnail
+                </Label>
+                <label htmlFor='thumbnail' className='block cursor-pointer'>
+                  <input
+                    id='thumbnail'
+                    type='file'
+                    accept='image/*'
+                    onChange={handleThumbnailChange}
+                    className='hidden'
+                    disabled={isUploadingThumbnail}
+                  />
+                  <div className='flex items-center gap-4'>
+                    <div className='relative h-40 w-72 overflow-hidden rounded-md border border-input bg-muted'>
+                      {thumbnailPreview ? (
+                        <>
+                          <img
+                            src={thumbnailPreview || "/placeholder.svg"}
+                            alt='Thumbnail preview'
+                            className='h-full w-full object-cover'
+                          />
+                          {isUploadingThumbnail && (
+                            <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
+                              <Loader2 className='h-8 w-8 animate-spin text-white' />
+                            </div>
+                          )}
+                          <Button
+                            type='button'
+                            variant='destructive'
+                            size='icon'
+                            className='absolute top-2 right-2 h-8 w-8'
+                            onClick={e => {
+                              e.stopPropagation(); // prevent triggering the file picker
+                              setThumbnailFile(null);
+                              setThumbnailPreview(null);
+                              setThumbnailUrl(null);
+                              form.setValue("thumbnail", "");
+                            }}
+                            disabled={isUploadingThumbnail}
+                          >
+                            <X className='h-4 w-4' />
+                          </Button>
+                        </>
+                      ) : (
+                        <div className='flex h-full w-full items-center justify-center'>
+                          <Upload className='h-8 w-8 text-muted-foreground' />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        disabled={isUploadingThumbnail}
+                      >
+                        {isUploadingThumbnail ? (
+                          <>
+                            <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                            Uploading...
+                          </>
+                        ) : thumbnailPreview ? (
+                          "Change Thumbnail"
+                        ) : (
+                          "Select Thumbnail"
+                        )}
+                      </Button>
+                      {thumbnailUrl && (
+                        <p className='mt-2 text-xs text-muted-foreground'>
+                          Uploaded successfully
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <div>
+          <div className='mb-4 flex items-center justify-between'>
+            <h2 className='text-2xl font-semibold'>Course Videos</h2>
+            <Button
+              type='button'
+              onClick={handleAddVideo}
+              variant='outline'
+              className='gap-2'
+            >
+              <PlusCircle className='h-4 w-4' />
+              Add Video
+            </Button>
+          </div>
+
+          {fields.length === 0 ? (
+            <div className='rounded-lg border border-dashed py-12 text-center'>
+              <Upload className='mx-auto h-12 w-12 text-muted-foreground' />
+              <p className='mt-2 text-muted-foreground'>
+                No videos added yet. Click "Add Video" to get started.
+              </p>
+              {form.formState.errors.videos?.root && (
+                <p className='mt-2 text-destructive'>
+                  {form.formState.errors.videos.root.message}
+                </p>
+              )}
+            </div>
+          ) : (
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+              modifiers={[restrictToVerticalAxis]}
+            >
+              <SortableContext
+                items={fields.map(f => f.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <div className='space-y-4'>
+                  {fields.map((video, index) => (
+                    <SortableVideoItem
+                      key={video.id}
+                      video={video}
+                      index={index}
+                      control={form.control}
+                      setVideoFiles={setVideoFiles}
+                      videoFile={
+                        videoFiles[video.id] || {
+                          file: null,
+                          previewUrl: null,
+                          videoUrl: null,
+                          isUploading: false
+                        }
+                      }
+                      onDelete={() => handleDeleteVideo(index, video.id)}
+                      isDragging={isDragging}
+                    />
+                  ))}
+                </div>
+              </SortableContext>
+            </DndContext>
+          )}
+        </div>
+
+        <div className='flex justify-end gap-4'>
+          <Button type='button' variant='outline'>
+            Cancel
+          </Button>
+          <Button
+            type='submit'
+            className='gap-2'
+            disabled={
+              form.formState.isSubmitting ||
+              Object.values(videoFiles).some(v => v.isUploading) ||
+              isUploadingThumbnail
+            }
+          >
+            {form.formState.isSubmitting ? (
+              <>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className='h-4 w-4' />
+                Save Course
+              </>
+            )}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
+
+export function CreateCoursePage() {
+  return (
     <AppLayout>
       <div className='px-8 pb-24'>
         <h1 className='mb-6 text-3xl font-bold'>Create New Course</h1>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-            <Card>
-              <CardContent className='pt-0'>
-                <div className='space-y-4'>
-                  <FormField
-                    control={form.control}
-                    name='courseTitle'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-base'>
-                          Course Title
-                        </FormLabel>
-                        <FormControl>
-                          <Input placeholder='Enter course title' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+        <CourseInfoForm />
+      </div>
+    </AppLayout>
+  );
+}
 
-                  <FormField
-                    name='courseCategory'
-                    render={({ field }) => (
-                      <SimpleFormItem label='Course Category' noControl>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder='Select a category' />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {categories.map(cat => (
-                              <SelectItem key={cat} value={cat}>
-                                {cat}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                      </SimpleFormItem>
-                    )}
-                  />
+export function EditCoursePage() {
+  const { courseId } = useParams();
 
-                  <FormField
-                    control={form.control}
-                    name='courseDescription'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className='text-base'>
-                          Course Description
-                        </FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder='Enter course description'
-                            className='min-h-[120px]'
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+  const { data: course, isError } = useQuery<FormValues>({
+    queryKey: ["course", courseId],
+    queryFn: () => apiRoutes.getCourse(courseId!)
+  });
 
-                  <div>
-                    <Label htmlFor='thumbnail' className='text-base'>
-                      Course Thumbnail
-                    </Label>
-                    <label htmlFor='thumbnail' className='block cursor-pointer'>
-                      <input
-                        id='thumbnail'
-                        type='file'
-                        accept='image/*'
-                        onChange={handleThumbnailChange}
-                        className='hidden'
-                        disabled={isUploadingThumbnail}
-                      />
-                      <div className='flex items-center gap-4'>
-                        <div className='relative h-40 w-72 overflow-hidden rounded-md border border-input bg-muted'>
-                          {thumbnailPreview ? (
-                            <>
-                              <img
-                                src={thumbnailPreview || "/placeholder.svg"}
-                                alt='Thumbnail preview'
-                                className='h-full w-full object-cover'
-                              />
-                              {isUploadingThumbnail && (
-                                <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
-                                  <Loader2 className='h-8 w-8 animate-spin text-white' />
-                                </div>
-                              )}
-                              <Button
-                                type='button'
-                                variant='destructive'
-                                size='icon'
-                                className='absolute top-2 right-2 h-8 w-8'
-                                onClick={e => {
-                                  e.stopPropagation(); // prevent triggering the file picker
-                                  setThumbnailFile(null);
-                                  setThumbnailPreview(null);
-                                  setThumbnailUrl(null);
-                                  form.setValue("thumbnailUrl", "");
-                                }}
-                                disabled={isUploadingThumbnail}
-                              >
-                                <X className='h-4 w-4' />
-                              </Button>
-                            </>
-                          ) : (
-                            <div className='flex h-full w-full items-center justify-center'>
-                              <Upload className='h-8 w-8 text-muted-foreground' />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <Button
-                            type='button'
-                            variant='outline'
-                            disabled={isUploadingThumbnail}
-                          >
-                            {isUploadingThumbnail ? (
-                              <>
-                                <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                                Uploading...
-                              </>
-                            ) : thumbnailPreview ? (
-                              "Change Thumbnail"
-                            ) : (
-                              "Select Thumbnail"
-                            )}
-                          </Button>
-                          {thumbnailUrl && (
-                            <p className='mt-2 text-xs text-muted-foreground'>
-                              Uploaded successfully
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+  return (
+    <AppLayout>
+      <div className='px-8 pb-24'>
+        <h1 className='mb-6 text-3xl font-bold'>Edit Course</h1>
 
-            <div>
-              <div className='mb-4 flex items-center justify-between'>
-                <h2 className='text-2xl font-semibold'>Course Videos</h2>
-                <Button
-                  type='button'
-                  onClick={handleAddVideo}
-                  variant='outline'
-                  className='gap-2'
-                >
-                  <PlusCircle className='h-4 w-4' />
-                  Add Video
-                </Button>
-              </div>
-
-              {fields.length === 0 ? (
-                <div className='rounded-lg border border-dashed py-12 text-center'>
-                  <Upload className='mx-auto h-12 w-12 text-muted-foreground' />
-                  <p className='mt-2 text-muted-foreground'>
-                    No videos added yet. Click "Add Video" to get started.
-                  </p>
-                  {form.formState.errors.videos?.root && (
-                    <p className='mt-2 text-destructive'>
-                      {form.formState.errors.videos.root.message}
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <DndContext
-                  sensors={sensors}
-                  collisionDetection={closestCenter}
-                  onDragStart={handleDragStart}
-                  onDragEnd={handleDragEnd}
-                  modifiers={[restrictToVerticalAxis]}
-                >
-                  <SortableContext
-                    items={fields.map(f => f.id)}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    <div className='space-y-4'>
-                      {fields.map((video, index) => (
-                        <SortableVideoItem
-                          key={video.id}
-                          video={video}
-                          index={index}
-                          control={form.control}
-                          setVideoFiles={setVideoFiles}
-                          videoFile={
-                            videoFiles[video.id] || {
-                              file: null,
-                              previewUrl: null,
-                              videoUrl: null,
-                              isUploading: false
-                            }
-                          }
-                          onDelete={() => handleDeleteVideo(index, video.id)}
-                          isDragging={isDragging}
-                        />
-                      ))}
-                    </div>
-                  </SortableContext>
-                </DndContext>
-              )}
-            </div>
-
-            <div className='flex justify-end gap-4'>
-              <Button type='button' variant='outline'>
-                Cancel
-              </Button>
-              <Button
-                type='submit'
-                className='gap-2'
-                disabled={
-                  form.formState.isSubmitting ||
-                  Object.values(videoFiles).some(v => v.isUploading) ||
-                  isUploadingThumbnail
-                }
-              >
-                {form.formState.isSubmitting ? (
-                  <>
-                    <Loader2 className='h-4 w-4 animate-spin' />
-                    Saving...
-                  </>
-                ) : (
-                  <>
-                    <Save className='h-4 w-4' />
-                    Save Course
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </Form>
+        {course && !isError && <CourseInfoForm course={course} />}
       </div>
     </AppLayout>
   );
@@ -626,7 +660,7 @@ function SortableVideoItem({
               <input
                 id={`video-file-${video.id}`}
                 type='file'
-                accept='video/*'
+                accept='image/*'
                 onChange={handleVideoChange}
                 className='hidden'
                 disabled={videoFile.isUploading}
@@ -634,10 +668,10 @@ function SortableVideoItem({
               <div className='relative h-[180px] overflow-hidden rounded-md border border-input bg-muted'>
                 {videoFile.previewUrl ? (
                   <>
-                    <video
+                    <img
                       src={videoFile.previewUrl}
                       className='h-full w-full object-cover'
-                      controls
+                      // controls
                     />
                     {videoFile.isUploading && (
                       <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
@@ -684,7 +718,7 @@ function SortableVideoItem({
 
           <div>
             <Controller
-              name={`videos.${index}.description`}
+              name={`videos.${index}.desc`}
               control={control}
               render={({ field }) => (
                 <>

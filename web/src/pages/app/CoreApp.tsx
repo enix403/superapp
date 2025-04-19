@@ -14,7 +14,8 @@ import { MiscPage } from "./dashboard/MiscPage";
 import { SortableGridPage } from "./dashboard/SortableGridPage";
 import { ProfilePage } from "./profile/ProfilePage";
 import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
-import { CreateCoursePage } from "../teacher/CreateCoursePage";
+import { CreateCoursePage } from "../teacher/CreateCourseForm";
+import { EditCoursePage } from "../teacher/CreateCourseForm";
 
 const items: SideRouteItem[] = [
   {
@@ -24,10 +25,16 @@ const items: SideRouteItem[] = [
     Comp: TeacherDashboardPage
   },
   {
-    path: "/create-course",
+    path: "/course/new",
     label: "Create Course",
     Icon: Frame,
     Comp: CreateCoursePage
+  },
+  {
+    path: "/course/:courseId",
+    label: "Edit Course",
+    Icon: Frame,
+    Comp: EditCoursePage
   },
   {
     path: "/s",
