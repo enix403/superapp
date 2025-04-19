@@ -5,7 +5,7 @@ import { Document, Schema, Types, model } from "mongoose";
 export interface IUser extends Document<Types.ObjectId> {
   email: string;
   passwordHash: string;
-  role: "admin" | "user";
+  role: "teacher" | "student";
   fullName: string;
   isActive: boolean;
   isVerified: boolean;
@@ -25,6 +25,8 @@ export interface IUser extends Document<Types.ObjectId> {
   addressCity?: string;
   addressArea?: string;
   addressZip?: string;
+
+
 }
 
 const userSchema = new Schema<IUser>(
@@ -33,7 +35,7 @@ const userSchema = new Schema<IUser>(
     passwordHash: { type: String, required: true },
     role: {
       type: String,
-      enum: ["admin", "user"],
+      enum: ["teacher", "student"],
       required: true
     },
 
@@ -59,6 +61,7 @@ const userSchema = new Schema<IUser>(
     addressCity: { type: String },
     addressArea: { type: String },
     addressZip: { type: String },
+
   },
   {
     timestamps: true,
@@ -73,5 +76,14 @@ const userSchema = new Schema<IUser>(
     }
   }
 );
+
+
+userSchema.virtual("courses", {
+  ref: "Course",
+  localField: "courses",
+  foreignField: "_id",
+
+});
+
 
 export const User = model("User", userSchema);

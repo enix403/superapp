@@ -10,10 +10,10 @@ mkdir -p .vol-data.mongo
 
 docker run -d \
   --rm -it \
-  --name $CONTAINER_NAME \
+  --name hello \
   -v ./.vol-data.mongo:/data/db \
   -p 27017:27017 \
   -e MONGO_INITDB_ROOT_USERNAME=user \
   -e MONGO_INITDB_ROOT_PASSWORD=pass \
-  -e MONGO_INITDB_DATABASE=$DATABASE_NAME \
+  -e MONGO_INITDB_DATABASE=hello-db \
   mongo:6.0
