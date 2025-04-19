@@ -224,7 +224,7 @@ export const apiRoutes = {
   // getUsers: jsonDecl(wq`/users`),
   getCourse: jsonDecl((courseId: string) => `/course/${courseId}`),
   getMyCourses: jsonDecl(`/course/get-my-courses`),
-  getCourses: jsonDecl(`/course`),
+  getCourses: jsonDecl(wq`/course`),
   createCourse: payloadDecl(`/course`),
   updateCourse: payloadDecl((courseId: string) => `/course/${courseId}`, { method: "PATCH" }),
 

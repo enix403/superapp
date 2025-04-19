@@ -11,6 +11,7 @@ import { apiRoutes } from "@/lib/api-routes";
 import { AppLayout } from "@/components/app-layout/AppLayout";
 import { categories } from "@/lib/constants";
 import { Link } from "react-router";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Course {
   id: number;
@@ -50,11 +51,20 @@ function CourseCatalog() {
   const level = watch("level");
 
   const levels = ["All", "Beginner", "Intermediate", "Advanced", "All Levels"];
+  const [isLoading, setIsLoading] = useState(false);
 
   // INTEGRATION POINT: Replace with actual API call to fetch initial courses
   const getCourses = async (): Promise<Course[]> => {
     // @ts-ignore
-    const inner = await apiRoutes.getCourses();
+    setIsLoading(true);
+    const inner = await apiRoutes
+      .getCourses({
+        title: searchTerm,
+        ...(category && category !== "All" ? { category } : {})
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
     const data = inner.map(course => ({
       ...course,
       instructor: course.teacherId.fullName,
@@ -180,42 +190,48 @@ function CourseCatalog() {
       {courses.length > 0 ? (
         <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3'>
           {courses.map(course => (
-            <Link to={`/app/course/${course['_id']}`}>
-            <Card
-              key={course['_id']}
-              className='cursor-pointer overflow-hidden transition-shadow duration-300 hover:shadow-lg'
-            >
-              <img
-                src={course.image}
-                alt={course.title}
-                className='h-48 w-full object-cover'
-              />
-              <CardHeader className='pb-2'>
-                <div className='flex items-start justify-between'>
-                  <CardTitle className='text-lg'>{course.title}</CardTitle>
-                </div>
-                <p className='text-sm text-gray-500'>by {course.instructor}</p>
-              </CardHeader>
-              <CardContent className='pb-2'>
-                <p className='line-clamp-2 text-sm text-gray-600'>
-                  {course.desc}
-                </p>
-              </CardContent>
-            </Card>
+            <Link to={`/app/course/${course["_id"]}`}>
+              <Card
+                key={course["_id"]}
+                className='cursor-pointer overflow-hidden transition-shadow duration-300 hover:shadow-lg'
+              >
+                <img
+                  src={course.image}
+                  alt={course.title}
+                  className='h-48 w-full object-cover'
+                />
+                <CardHeader className='pb-2'>
+                  <div className='flex items-start justify-between'>
+                    <CardTitle className='text-lg'>{course.title}</CardTitle>
+                  </div>
+                  <p className='text-sm text-gray-500'>
+                    by {course.instructor}
+                  </p>
+                </CardHeader>
+                <CardContent className='pb-2'>
+                  <p className='line-clamp-2 text-sm text-gray-600'>
+                    {course.desc}
+                  </p>
+                </CardContent>
+              </Card>
             </Link>
           ))}
         </div>
       ) : (
         <div className='flex flex-col items-center justify-center py-12'>
-          <div className='text-center'>
-            <h3 className='mb-2 text-lg font-medium'>No courses found</h3>
-            <p className='mb-6 text-gray-500'>
-              Try adjusting your filters or search terms
-            </p>
-            <Button onClick={() => reset()} disabled={isSubmitting}>
-              Reset filters
-            </Button>
-          </div>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div className='text-center'>
+              <h3 className='mb-2 text-lg font-medium'>No courses found</h3>
+              <p className='mb-6 text-gray-500'>
+                Try adjusting your filters or search terms
+              </p>
+              <Button onClick={() => reset()} disabled={isSubmitting}>
+                Reset filters
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>
