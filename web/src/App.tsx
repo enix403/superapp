@@ -24,6 +24,7 @@ import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { useEffect, useLayoutEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { OAuthSuccess } from "./pages/auth/OAuthSuccess";
+import Navbar from "./components/navbar/Navbar";
 
 function ResetUserQueries() {
   const queryClient = useQueryClient();
@@ -60,6 +61,7 @@ export function App() {
       <ResetUserQueries />
       <BrowserRouter>
         {/* prettier-ignore */}
+        <Navbar />
         <Routes>
           {/* <Route path='/s' element={<Scratch />} /> */}
           <Route path='' element={<HomePage />} />
