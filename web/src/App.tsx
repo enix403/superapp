@@ -25,6 +25,8 @@ import { useEffect, useLayoutEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { OAuthSuccess } from "./pages/auth/OAuthSuccess";
 import CreateCoursePage from "./pages/teacher/CreateCoursePage";
+import CourseCatalog from "./pages/student/CourseCatalog";
+import CourseView from "./pages/student/CourseView";
 
 function ResetUserQueries() {
   const queryClient = useQueryClient();
@@ -118,6 +120,8 @@ export function App() {
 
 
           <Route path='/teacher/course' element={<CreateCoursePage />} />
+          <Route path='/student/course' element={<CourseCatalog />} />
+          <Route path='/student/:courseId' element={<CourseView />} />
         </Routes>
       </BrowserRouter>
     </Providers>
