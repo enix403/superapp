@@ -62,8 +62,11 @@ router.add(
     }
   },
   async (req, res) => {
-    const user = await User.findById(req.params.id);
+
+    let user = await User.findById(req.params.id);
     if (!user) throw new NotFound();
+    if (user.role === "teacher")
+      user = await user.populate("courses")
     return reply(res, user);
   }
 );

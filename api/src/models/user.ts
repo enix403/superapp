@@ -80,9 +80,8 @@ const userSchema = new Schema<IUser>(
 
 userSchema.virtual("courses", {
   ref: "Course",
-  localField: "courses",
-  foreignField: "_id",
-
+  localField: "_id",
+  foreignField: "teacherId",
 });
 
 

@@ -1,10 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { Types } from 'mongoose';
 
 // Define the Video subdocument
 interface IVideo {
     title: string;
     desc: string;
-    url: string;
+    videoUrl: string;
 }
 
 export interface ICourse extends Document {
@@ -13,12 +14,13 @@ export interface ICourse extends Document {
     thumbnail: string;
     videos: IVideo[];
     category: string;
+    teacherId: Types.ObjectId;
 }
 
 const videoSchema: Schema<IVideo> = new Schema<IVideo>(
     {
         title: { type: String, required: true },
-        url: { type: String, required: true },
+        videoUrl: { type: String, required: true },
         desc: { type: String },
 
     },
@@ -31,16 +33,21 @@ const courseSchema: Schema<ICourse> = new Schema<ICourse>(
         desc: { type: String, required: true },
         thumbnail: { type: String, required: true },
         videos: [videoSchema],
-        category: [String]
+        category: { type: String, required: true },
+        teacherId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
     },
     { timestamps: true }
 );
 
 
-courseSchema.virtual("teacherId", {
+courseSchema.virtual("teacher", {
     ref: "User",
-    localField: "_id",
-    foreignField: "courses",
+    localField: "teacherId",
+    foreignField: "_id",
     justOne: true
 });
 
