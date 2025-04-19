@@ -14,8 +14,21 @@ import { MiscPage } from "./dashboard/MiscPage";
 import { SortableGridPage } from "./dashboard/SortableGridPage";
 import { ProfilePage } from "./profile/ProfilePage";
 import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
+import { CreateCoursePage } from "../teacher/CreateCoursePage";
 
 const items: SideRouteItem[] = [
+  {
+    path: "/teacher-dashboard",
+    label: "Teacher Dashboard",
+    Icon: Frame,
+    Comp: TeacherDashboardPage
+  },
+  {
+    path: "/create-course",
+    label: "Create Course",
+    Icon: Frame,
+    Comp: CreateCoursePage
+  },
   {
     path: "/s",
     label: "Scratch",
@@ -69,12 +82,6 @@ const items: SideRouteItem[] = [
     label: "My Profile",
     Icon: Frame,
     Comp: ProfilePage
-  },
-  {
-    path: "/teacher-dashboard",
-    label: "Teacher Dashboard",
-    Icon: Frame,
-    Comp: TeacherDashboardPage
   }
 ];
 
