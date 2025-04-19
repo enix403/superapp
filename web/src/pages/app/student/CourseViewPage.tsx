@@ -190,10 +190,10 @@ export function CourseViewPage() {
             >
               <div className='flex flex-col sm:flex-row'>
                 <div className='relative h-36 w-full sm:w-48'>
-                  <img
+                  <video
                     src={video.videoUrl}
                     className='h-full w-full object-cover'
-                    // controls
+                    controls
                   />
                 </div>
                 <CardContent className='flex-1 p-4'>

@@ -682,7 +682,7 @@ function SortableVideoItem({
               <input
                 id={`video-file-${video.id}`}
                 type='file'
-                accept='image/*'
+                accept='video/*'
                 onChange={handleVideoChange}
                 className='hidden'
                 disabled={videoFile.isUploading}
@@ -690,10 +690,10 @@ function SortableVideoItem({
               <div className='relative h-[180px] overflow-hidden rounded-md border border-input bg-muted'>
                 {videoFile.previewUrl ? (
                   <>
-                    <img
+                    <video
                       src={videoFile.previewUrl}
                       className='h-full w-full object-cover'
-                      // controls
+                      controls
                     />
                     {videoFile.isUploading && (
                       <div className='absolute inset-0 flex items-center justify-center bg-black/50'>
