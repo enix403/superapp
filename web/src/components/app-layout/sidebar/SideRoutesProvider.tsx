@@ -5,6 +5,7 @@ export type SideRouteItem = {
   label: string,
   Icon: ComponentType<any>,
   Comp: ComponentType<any>,
+  hide?: boolean;
 };
 
 export const SideRoutesProvider = createContext<SideRouteItem[]>([]);

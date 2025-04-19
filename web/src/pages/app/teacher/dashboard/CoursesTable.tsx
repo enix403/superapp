@@ -25,6 +25,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiRoutes } from "@/lib/api-routes";
 import { Button } from "@/components/ui/button";
 import { PlusIcon } from "lucide-react";
+import { Link } from "react-router";
 
 type Item = {
   id: string;
@@ -149,7 +150,9 @@ export function CoursesTable() {
     // queryFn: () => apiRoutes.getCourses()
   });
 
-  const deleteMutation = useOptimisticDelete(apiRoutes.deleteUser);
+  const deleteMutation = useOptimisticDelete(id =>
+    apiRoutes.deleteCourse(undefined, id)
+  );
   const batchDeleteMutation = useOptimisticDelete((userIds: string[]) =>
     apiRoutes.deleteUsersBatch({ ids: userIds })
   );
@@ -204,39 +207,12 @@ export function CoursesTable() {
       renderActions={row => (
         <>
           <DropdownMenuGroup>
-            {/* <UserInfoModal mode='edit' userId={row.original.id}>
+            <Link to={`/app/course/edit/${row.original.id}`}>
               <DropdownMenuItem onSelect={e => e.preventDefault()}>
                 <span>Edit</span>
                 <DropdownMenuShortcut>⌘E</DropdownMenuShortcut>
               </DropdownMenuItem>
-            </UserInfoModal> */}
-            <DropdownMenuItem>
-              <span>Duplicate</span>
-              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
-            </DropdownMenuItem>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>
-              <span>Archive</span>
-              <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
-            </DropdownMenuItem>
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>More</DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem>Move to project</DropdownMenuItem>
-                  <DropdownMenuItem>Move to folder</DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>Advanced options</DropdownMenuItem>
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
-          </DropdownMenuGroup>
-          <DropdownMenuSeparator />
-          <DropdownMenuGroup>
-            <DropdownMenuItem>Share</DropdownMenuItem>
-            <DropdownMenuItem>Add to favorites</DropdownMenuItem>
+            </Link>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <ConfirmDialog

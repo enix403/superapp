@@ -1,26 +1,23 @@
 import { Route, Routes } from "react-router";
-import { DashboardPage } from "./dashboard/DashboardPage";
-import { DataTablePage } from "./datatable/DataTablePage";
-import { ComplexFormPage } from "./form/ComplexFormPage";
-import { ScratchPage } from "./_scratch/ScratchPage";
 import { Frame } from "lucide-react";
 import {
   SideRouteItem,
   SideRoutesProvider
 } from "@/components/app-layout/sidebar/SideRoutesProvider";
-import { ImageFormsPage } from "./form/ImageFormsPage";
-import { AsyncSelectPage } from "./dashboard/AsyncSelectPage";
-import { MiscPage } from "./dashboard/MiscPage";
-import { SortableGridPage } from "./dashboard/SortableGridPage";
-import { ProfilePage } from "./profile/ProfilePage";
-import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
-import { CreateCoursePage } from "../teacher/CreateCourseForm";
-import { EditCoursePage } from "../teacher/CreateCourseForm";
-import { CourseCatalogPage } from "../teacher/CourseCatalog";
-import { CourseStudentView } from "../teacher/CourseStudentView";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
+import { useMemo } from "react";
+// import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
+// import { CreateCoursePage } from "../teacher/CreateCourseForm";
+// import { EditCoursePage } from "../teacher/CreateCourseForm";
+// import { CourseCatalogPage } from "../teacher/CourseCatalog";
+// import { CourseStudentView } from "../teacher/CourseStudentView";
+import { DashboardPage as TeacherDashboardPage } from "./teacher/dashboard/DashboardPage";
+import { CreateCoursePage } from "./teacher/course/CreateCoursePage";
+import { EditCoursePage } from "./teacher/course/EditCoursePage";
+
 
 const items: SideRouteItem[] = [
-  {
+  /* {
     path: "/teacher-dashboard",
     label: "Teacher Dashboard",
     Icon: Frame,
@@ -103,16 +100,49 @@ const items: SideRouteItem[] = [
     label: "My Profile",
     Icon: Frame,
     Comp: ProfilePage
-  }
+  } */
 ];
 
+const teacherRoutes: SideRouteItem[] = [
+  {
+    path: "/",
+    label: "Dashboard",
+    Icon: Frame,
+    Comp: TeacherDashboardPage
+  },
+  {
+    path: "/course/new",
+    label: "Create Course",
+    Icon: Frame,
+    Comp: CreateCoursePage
+  },
+  {
+    path: "/course/edit/:courseId",
+    label: "",
+    Icon: Frame,
+    Comp: EditCoursePage,
+    hide: true
+  }
+];
+const studentRoutes: SideRouteItem[] = [];
+
 export function CoreApp() {
+  const { user } = useCurrentUser();
+
+  const items = useMemo(
+    () =>
+      user ? (user.role === "teacher" ? teacherRoutes : studentRoutes) : [],
+    [user]
+  );
+
   return (
     <SideRoutesProvider.Provider value={items}>
       <Routes>
-        {items.map(({ path, Comp }) => (
-          <Route key={path} path={path} element={<Comp />} />
-        ))}
+        {/* <Route path='' element={<Navigate to='dashboard' replace />} /> */}
+        {items
+          .map(({ path, Comp }) => (
+            <Route key={path} path={path} element={<Comp />} />
+          ))}
       </Routes>
     </SideRoutesProvider.Provider>
   );

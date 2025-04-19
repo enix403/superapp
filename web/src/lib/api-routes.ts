@@ -223,6 +223,7 @@ export const apiRoutes = {
   /* ========================== */
   // getUsers: jsonDecl(wq`/users`),
   getCourse: jsonDecl((courseId: string) => `/course/${courseId}`),
+  deleteCourse: payloadDecl((courseId: string) => `/course/${courseId}`, { method: "DELETE" }),
   getMyCourses: jsonDecl(`/course/get-my-courses`),
   getCourses: jsonDecl(wq`/course`),
   createCourse: payloadDecl(`/course`),

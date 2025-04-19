@@ -96,6 +96,8 @@ export function CourseInfoForm({ course }: { course?: any }) {
   const [isDragging, setIsDragging] = useState(false);
 
   const videos = useMemo(() => {
+    if (!course?.videos)
+      return [];
     // course.videos;
     const videos: any[] = [];
     for (const v of course.videos) {
@@ -127,7 +129,7 @@ export function CourseInfoForm({ course }: { course?: any }) {
   });
 
   useEffect(() => {
-    if (course.thumbnail) setThumbnailPreview(course.thumbnail);
+    if (course?.thumbnail) setThumbnailPreview(course.thumbnail);
   }, [course]);
 
   useEffect(() => {
@@ -508,7 +510,7 @@ export function CourseInfoForm({ course }: { course?: any }) {
   );
 }
 
-export function CreateCoursePage() {
+/* export function CreateCoursePage() {
   return (
     <AppLayout>
       <div className='px-8 pb-24'>
@@ -538,7 +540,7 @@ export function EditCoursePage() {
     </AppLayout>
   );
 }
-
+ */
 interface SortableVideoItemProps {
   video: any;
   index: number;

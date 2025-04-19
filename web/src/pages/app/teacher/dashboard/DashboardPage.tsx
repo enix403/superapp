@@ -3,7 +3,7 @@ import { CoursesTable } from "./CoursesTable";
 
 export function DashboardPage() {
   return (
-    <AppLayout title="Dashboard">
+    <AppLayout title='Dashboard'>
       <CoursesTable />
     </AppLayout>
   );

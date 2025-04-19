@@ -45,9 +45,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarMenu>
-            {items.map(item => (
-              <AppSidebarItem key={item.path} item={item} />
-            ))}
+            {items
+              .filter(item => item.hide !== true)
+              .map(item => (
+                <AppSidebarItem key={item.path} item={item} />
+              ))}
           </SidebarMenu>
         </SidebarGroup>
         {/*  */}
