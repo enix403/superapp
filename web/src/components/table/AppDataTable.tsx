@@ -52,6 +52,7 @@ import {
   getFacetedRowModel
 } from "@tanstack/react-table";
 import { RowActions } from "./blocks/RowActions";
+import { Spinner } from "../ui/spinner";
 
 function selectBoxColumnDef<T>() {
   const def: ColumnDef<T> = {
@@ -143,6 +144,7 @@ function rowActionsDef<T>(renderActions?: (row: Row<T>) => ReactNode) {
 export function AppDataTable<Item>({
   data,
   columns: originalColumns,
+  loading = false,
   initialSort = [],
   renderFilters,
   enableRowExpand = false,
@@ -160,6 +162,7 @@ export function AppDataTable<Item>({
   canRowExpand?: (row: Row<Item>) => boolean;
   renderExpandedRow?: (row: Row<Item>) => ReactNode;
   renderActions?: (row: Row<Item>) => ReactNode;
+  loading?: boolean;
 }) {
   const columns = useMemo(() => {
     return [
@@ -236,6 +239,7 @@ export function AppDataTable<Item>({
         table={table}
         renderExpandedRow={renderExpandedRow}
         columns={columns}
+        loading={loading}
       />
 
       {/* Pagination */}
@@ -247,11 +251,13 @@ export function AppDataTable<Item>({
 function InnerTable<Item>({
   table,
   renderExpandedRow,
-  columns
+  columns,
+  loading = false
 }: {
   table: TableInstance<Item>;
   renderExpandedRow?: (row: Row<Item>) => ReactNode;
   columns: ColumnDef<Item>[];
+  loading?: boolean;
 }) {
   return (
     <div className='overflow-hidden rounded-md border bg-background'>
@@ -346,7 +352,7 @@ function InnerTable<Item>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className='h-24 text-center'>
-                No results.
+                {loading ? <Spinner /> : "No results."}
               </TableCell>
             </TableRow>
           )}

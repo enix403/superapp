@@ -143,7 +143,7 @@ const useOptimisticDelete = (
 };
 
 export function CoursesTable() {
-  const { data = [] } = useQuery({
+  const { data = [], isLoading } = useQuery({
     queryKey: listQueryKey,
     // queryFn: () => apiRoutes.getMyCourses()
     queryFn: () => apiRoutes.getCourses()
@@ -156,21 +156,10 @@ export function CoursesTable() {
 
   console.log(data);
 
-  // const data: Item[] = [
-  //   {
-  //     id: "0",
-  //     title: "hello",
-  //     desc: "dawwaaw",
-  //     thumbnail:
-  //       "https://res.cloudinary.com/dlzlfasou/image/upload/v1736358071/avatar-40-02_upqrxi.jpg",
-  //     videos: ["dawwa", "DAWwa"],
-  //     enrollments: ["1", "dwawa"]
-  //   }
-  // ];
-
   return (
     <AppDataTable
       data={data}
+      loading={isLoading}
       columns={columns}
       initialSort={
         [
