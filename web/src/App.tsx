@@ -24,6 +24,7 @@ import { VerifyEmail } from "./pages/auth/VerifyEmail";
 import { useEffect, useLayoutEffect } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { OAuthSuccess } from "./pages/auth/OAuthSuccess";
+import CreateCoursePage from "./pages/teacher/CreateCoursePage";
 
 function ResetUserQueries() {
   const queryClient = useQueryClient();
@@ -112,7 +113,11 @@ export function App() {
                 <CoreApp />
               </Protect>
             }
+
           />
+
+
+          <Route path='/teacher/course' element={<CreateCoursePage />} />
         </Routes>
       </BrowserRouter>
     </Providers>
