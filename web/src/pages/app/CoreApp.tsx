@@ -16,6 +16,7 @@ import { ProfilePage } from "./profile/ProfilePage";
 import { DashboardPage as TeacherDashboardPage } from "../teacher/DashboardPage";
 import { CreateCoursePage } from "../teacher/CreateCourseForm";
 import { EditCoursePage } from "../teacher/CreateCourseForm";
+import { CourseCatalogPage } from "../teacher/CourseCatalog";
 
 const items: SideRouteItem[] = [
   {
@@ -23,6 +24,12 @@ const items: SideRouteItem[] = [
     label: "Teacher Dashboard",
     Icon: Frame,
     Comp: TeacherDashboardPage
+  },
+  {
+    path: "/course/all",
+    label: "All Courses",
+    Icon: Frame,
+    Comp: CourseCatalogPage
   },
   {
     path: "/course/new",

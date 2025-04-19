@@ -145,8 +145,8 @@ const useOptimisticDelete = (
 export function CoursesTable() {
   const { data = [], isLoading } = useQuery({
     queryKey: listQueryKey,
-    // queryFn: () => apiRoutes.getMyCourses()
-    queryFn: () => apiRoutes.getCourses()
+    queryFn: () => apiRoutes.getMyCourses()
+    // queryFn: () => apiRoutes.getCourses()
   });
 
   const deleteMutation = useOptimisticDelete(apiRoutes.deleteUser);
