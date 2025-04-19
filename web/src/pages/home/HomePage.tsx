@@ -4,8 +4,10 @@ import { SplineScene } from "@/components/ui/splite";
 import { Card } from "@/components/ui/card";
 import { Spotlight } from "@/components/ui/spotlight";
 import { motion } from "motion/react";
-
+import TextEffect from './TextEffect'
 import { World } from "@/components/ui/globe";
+import CodeBlock from "./CodeBlock";
+import HighlightText from "./HighlightText";
 
 export function HomePage() {
   const globeConfig = {
@@ -395,70 +397,110 @@ export function HomePage() {
   ];
 
   return (
-    <div className='flex h-full max-h-full w-full max-w-full flex-col'>
-      <div className={"flex w-full flex-1-fix flex-col overflow-y-auto"}>
-        <div className='px-4'>
-          <div className='relative flex h-screen w-full flex-row items-center justify-center bg-white py-20 md:h-auto dark:bg-black'>
-            <div className='relative mx-auto h-full w-full max-w-7xl overflow-hidden px-4 md:h-[40rem]'>
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 20
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0
-                }}
-                transition={{
-                  duration: 1
-                }}
-                className='div'
-              >
-                <h2 className='text-center text-xl font-bold text-black md:text-4xl dark:text-white'>
-                  We sell soap worldwide
-                </h2>
-                <p className='mx-auto mt-2 max-w-md text-center text-base font-normal text-neutral-700 md:text-lg dark:text-neutral-200'>
-                  This globe is interactive and customizable. Have fun with it,
-                  and don&apos;t forget to share it. :)
-                </p>
-              </motion.div>
-              <div className='pointer-events-none absolute inset-x-0 bottom-0 z-40 h-40 w-full bg-gradient-to-b from-transparent to-white select-none dark:to-black' />
-              <div className='absolute -bottom-20 z-10 h-72 w-full md:h-full'>
-                <World data={sampleArcs} globeConfig={globeConfig} />
+    <>
+
+      <div className='flex h-full max-h-full w-full max-w-full flex-col'>
+        <div className="absolute inset-20 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]"><div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#d5c5ff,transparent)]"></div></div>
+        <div className={"flex w-full flex-1-fix flex-col overflow-y-auto"}>
+          <div className='px-4'>
+            <div className='relative flex h-screen w-full flex-row items-center justify-center  py-20 md:h-auto dark:bg-black'>
+              <div className='relative mx-auto h-full w-full max-w-7xl overflow-hidden px-4 md:h-[40rem]'>
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    y: 20
+                  }}
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }}
+                  transition={{
+                    duration: 1
+                  }}
+                  className='div'
+                >
+
+                  <TextEffect />
+
+                </motion.div>
+                <div className='pointer-events-none absolute inset-x-0 bottom-0 z-40 h-40 w-full bg-gradient-to-b from-transparent to-white select-none dark:to-black' />
+                <div className='absolute -bottom-20 z-10 h-72 w-full md:h-full'>
+                  <World data={sampleArcs} globeConfig={globeConfig} />
+                </div>
               </div>
+            </div>
+            <Card className='relative h-[500px] w-full overflow-hidden bg-black/[0.96]'>
+              <Spotlight
+                className='-top-40 left-0 md:-top-20 md:left-60'
+                /* @ts-ignore */
+                fill='white'
+              />
+
+              <div className='flex h-full'>
+                {/* Left content */}
+                <div className='relative z-10 flex flex-1 flex-col justify-center p-8'>
+                  <h1 className='bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-4xl font-bold text-transparent md:text-5xl'>
+                    Interactive 3D
+                  </h1>
+                  <p className='mt-4 max-w-lg text-neutral-300'>
+                    Bring your UI to life with beautiful 3D scenes. Create
+                    immersive experiences that capture attention and enhance your
+                    design.
+                  </p>
+                </div>
+
+                {/* Right content */}
+                <div className='relative flex-1'>
+                  <SplineScene
+                    scene='https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode'
+                    className='h-full w-full'
+                  />
+                </div>
+              </div>
+            </Card>
+            <div className="xl:p-16 lg:p-12 md:p-8 p-4">
+
+              <CodeBlock
+                position="lg:flex-row"
+                heading={
+                  <div className='text-4xl md:text-5xl xl:text-6xl leading-snug font-semibold'>
+                    Accelerate your
+                    <HighlightText text=" career journey " direction="bg-gradient-to-b" gradient="from-[#1FA2FF] via-[#12D8FA] to-[#A6FFCB]" />
+                    with our AI Job Platform
+                  </div>
+                }
+                subheading="Prepare for your dream job with personalized quizzes, real-time interview simulations, and comprehensive performance reports. Our AI-driven platform is designed to enhance your interview skills and boost your confidence."
+                ctnbtn1={{
+                  btnText: "Get Started",
+                  linkto: "/signup",
+                  active: true,
+                }}
+                ctnbtn2={{
+                  btnText: "Explore Features",
+                  linkto: "/login",
+                  active: false,
+                }}
+                codeblock={`<html>
+                                <head>
+                                <title>AI Job Platform</title>
+                                </head>
+                                <body>
+                                <h1><a href="/">AI Job Platform</a></h1>
+                                <nav>
+                                <a href="one/">Generate Quizzes</a>
+                                <a href="two/">Real-time Interviews</a>
+                                        <a href="three/">Performance Reports</a>
+                                        </nav>
+                                        </body>
+                                        </html>
+                                        `}
+                codeColor="text-yellow-25"
+                backgroundGradient={<div className='codeblock2 absolute'></div>}
+              />
             </div>
           </div>
-          <Card className='relative h-[500px] w-full overflow-hidden bg-black/[0.96]'>
-            <Spotlight
-              className='-top-40 left-0 md:-top-20 md:left-60'
-              /* @ts-ignore */
-              fill='white'
-            />
-
-            <div className='flex h-full'>
-              {/* Left content */}
-              <div className='relative z-10 flex flex-1 flex-col justify-center p-8'>
-                <h1 className='bg-gradient-to-b from-neutral-50 to-neutral-400 bg-clip-text text-4xl font-bold text-transparent md:text-5xl'>
-                  Interactive 3D
-                </h1>
-                <p className='mt-4 max-w-lg text-neutral-300'>
-                  Bring your UI to life with beautiful 3D scenes. Create
-                  immersive experiences that capture attention and enhance your
-                  design.
-                </p>
-              </div>
-
-              {/* Right content */}
-              <div className='relative flex-1'>
-                <SplineScene
-                  scene='https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode'
-                  className='h-full w-full'
-                />
-              </div>
-            </div>
-          </Card>
         </div>
       </div>
-    </div>
+    </>
   );
 }
