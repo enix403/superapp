@@ -1,0 +1,228 @@
+https://github.com/alan2207/bulletproof-react
+https://github.com/alan2207/react-query-auth
+https://tanstack.com/query/v5/docs/framework/react/guides/optimistic-updates#via-the-ui
+https://tkdodo.eu/blog/react-query-and-type-script
+
+VERY GOOD APP DESIGNS
+https://dribbble.com/bagus_fikri
+https://dribbble.com/fikristudio
+
+Complete App
+https://shadcn-admin.netlify.app/chats
+https://github.com/birobirobiro/awesome-shadcn-ui
+
+Shadcn form builder
+https://formbuilder.kurdmake.com/
+https://ui.indie-starter.dev/form-builder
+  supports more types
+https://shadcn-form-build.vercel.app/playground
+  ever more tons of types, including some complex ones
+
+Pricing Page generator
+https://shipixen.com/shadcn-pricing-page
+
+Shadcn theme generator
+  (with a randomize button)
+    https://shadcnthemeeditor.vercel.app/
+    https://ui.jln.dev/
+
+  consistent
+    https://ui.ewgenius.me/shadcn-radix-colors?base=mauve&accent=violet&primary=jade&mode=light
+    https://shadesigner.com/
+      has random button (**)
+
+  from a single color
+    https://navnote.github.io/rangeen/
+
+Shandcn font theme selector previwer
+https://www.uifonts.app/
+
+Components from 21st.dev
+==========
+
+https://v0.dev
+https://v0.dev/community/shopify-product-page-design-NxSj0IgX4vu
+https://v0.dev/community/design-tool-dJAT4gFWmAi
+https://v0.dev/community/financial-dashboard-functional-jUBqSBJsNrz
+
+https://21st.dev/arihantcodes/footer-section/default
+https://21st.dev/aceternity/feature-section-with-hover-effects/default
+https://21st.dev/kokonutd/social-card/default
+https://21st.dev/kokonutd/interactive-checkout/default
+https://21st.dev/kokonutd/color-input/default
+https://21st.dev/kokonutd/chat-card/default
+https://21st.dev/jakobhoeg/expandable-chat/default
+https://21st.dev/aceternity/glowing-effect/default
+https://21st.dev/kokonutd/use-tags/default
+https://21st.dev/aceternity/content-card/default
+
+Components
+==========
+
+https://21st.dev/serafimcloud/splite/default
+
+Hottest:
+  Each component is cool
+  https://skiper-ui.com/
+
+Much cleaner date and date range picker
+https://shadcn-calendar-component.vercel.app/
+
+A smart datetime picker which understands natural language input.
+https://linguatime.nainglinnkhant.com/
+
+Phone inputs
+  https://shadcn-phone-input.vercel.app/
+  https://shadcn-phone-input-five.vercel.app/
+
+Country picker
+https://shadcn-country-dropdown.vercel.app/
+
+Much better and full features shadcn table
+https://table.sadmn.com
+
+Location picker with map
+https://shadcn-location-picker.vercel.app/
+
+---
+
+File upload with image preview and react-hook-form
+https://supercharged-shadcn-components.dykennethryan.com/docs/components/form/rhf-upload
+
+File upload (looks better than above)
+https://www.diceui.com/docs/components/file-upload#direct-upload
+
+Multi image upload squares (but nextjs)
+https://github.com/jacksonkasi0/nextjs-multi-image-upload
+
+simple image upload with preview (very simple tho)
+https://image-upload-shadcn.vercel.app/
+
+file upload modal
+https://bg.ibelick.com/
+
+-----
+
+Rating
+https://supercharged-shadcn-components.dykennethryan.com/docs/components/rating
+
+Cleaner multiselect
+https://shadcn-multi-select-component.vercel.app/
+
+Number Ticker
+https://magicui.design/docs/components/number-ticker
+
+Trello-like drag and drop board columns
+https://www.diceui.com/docs/components/kanban
+
+A component that allows to mention items in a list by a trigger character.
+https://www.diceui.com/docs/components/mention
+
+Cool background patterns
+https://bg.ibelick.com/
+
+Cool things
+https://kokonutui.com/docs/components/action-search-bar
+
+Cool floating dock/toolbar
+https://ui.aceternity.com/components/floating-dock
+
+Cool "blur remaining" cards
+https://ui.aceternity.com/components/focus-cards
+
+Cool text highlight animation
+https://ui.aceternity.com/components/hero-highlight
+
+3d globe (good for landing page)
+https://ui.aceternity.com/components/github-globe
+
+very cool effect(s) haha
+https://www.edilozi.pro/docs/components/fluid-cursor
+
+Border Animations
+https://magicui.design/docs/components/border-beam
+https://magicui.design/docs/components/shine-border
+
+Confetti
+https://magicui.design/docs/components/confetti
+
+Blur Fade in Card/elements
+https://magicui.design/docs/components/blur-fade
+
+Animated Gradient text (and other cool animations)
+https://magicui.design/docs/components/aurora-text
+
+Complete (floating and everyhting) chatBOT UI
+https://druidui.com/
+
+Chat components
+https://shadcn-chatbot-kit.vercel.app
+
+(Better than above)
+https://shadcn-chat.vercel.app/
+
+AI Chat UI Components
+https://www.simple-ai.dev/docs
+
+Feature rich lexical editor
+https://shadcn-editor.vercel.app/docs/plugins/equation
+
+even better editor
+https://platejs.org/
+
+"mouse drag" number input (like in unity and other editors)
+https://shadcn-react-number-scrubber.vercel.app/
+
+Blocks
+======
+https://www.twblocks.com/
+
+Great
+https://tremor.so/
+https://insights.tremor.so/transactions
+
+(only few free)
+https://shadcn-ui-blocks.vercel.app/
+
+https://github.com/johanguse/shadcn-carousel-testimonials
+
+ui kit
+https://manfromexistence-ui.vercel.app/
+
+https://shadcn.batchtool.com/
+
+-----
+
+just in case
+
+animated number display
+https://number-flow.barvian.me/
+
+ai editor
+https://github.com/steven-tey/novel
+
+https://next-stepper.vercel.app/
+
+LLMs UIs (like chatgpt)
+https://www.assistant-ui.com/examples
+
+ECommerce (small) primitives
+https://ui.stackzero.co/
+
+----
+
+Much cooler buttons
+https://enhanced-button.vercel.app/
+
+Micro animations (like animated buttons and counter etc)
+https://www.shsfui.com/primitives
+
+Copy paste date AND TIME picker
+https://time.openstatus.dev/
+
+Relative Time View / Various useful time renders
+https://www.diceui.com/docs/components/relative-time-card
+
+DND Sortable items/grid
+https://www.diceui.com/docs/components/sortable
+

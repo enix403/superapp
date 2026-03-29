@@ -1,0 +1,91 @@
+
+------
+
+auth
+  profile
+    user profile crud
+
+sockets
+  chat
+  notifications
+
+
+landing page
+about us page
+contact us page
+not found page
+logo
+dark theme
+
+charts
+page title / helmet
+lazy loading
+
+comments
+payments (stripe) ?
+  one time
+  subscriptions
+
+unit testing
+eslint ?
+README.md
+
+--------
+
+chatbot
+webcam
+text editor
+  shared docs
+
+caching / redis ?
+
+----
+
+password security on server
+
+tables
+  pagination
+    server
+  filtering
+    server
+  sorting
+    server
+
+auth
+  login
+    enter code sent in mail
+
+----
+
+Wire everything up. Make <AvatarChanger /> component actually display and update user avatar
+
+// you can get the current user object using this hook
+export function useCurrentUser() {
+  const { token } = useAuthState();
+
+  const { data: user, ...rest } = useQuery({
+    queryKey: ["me", token],
+    queryFn: token ? apiRoutes.getMe : skipToken,
+    staleTime: Infinity
+  });
+
+  return { user, ...rest };
+}
+
+/*
+displays an image of the user profile picture of the current logged in user.
+on clicking it shows a box where user and change the image and calls the given onSave prop function when the user has finallized the image uploading
+*/
+<AvatarChanger
+  initialImageSrc={/* url of initial user image */}
+  onSave={async (base64Image: string) => {
+    // upload the image using the previously generated uploadFiles function, which returns an (array with one element) url of the uploaded file.
+    // pass that url to the global apiRoutes.updateMe({ ... fields ... }) function which, among other fields accepts the profilePictureUrl field to update
+    // make sure to handle react query cache invalidation using queryClient
+  }}
+/>
+
+
+set commits
+deploy
+set env
